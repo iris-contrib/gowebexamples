@@ -1,8 +1,7 @@
-baseUrl = "https://gowebexamples.github.io/"
+baseUrl = "https://docs.iris-go.com/"
 languageCode = "en-us"
-title = "Go Web Examples"
+title = "Iris Go Web Examples"
 PygmentsCodeFences = true
 PygmentsStyle = "trac"
-
 [Params]
-description = "Go Web Examples provides easy to understand code snippets on how to do web development in the Go programming language."
+description = "Iris Go Web Examples provides easy to understand code snippets on how to get started with web development in the Go programming language and Iris web framework."

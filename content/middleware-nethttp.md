@@ -1,21 +1,17 @@
 +++
 weight = 11
-title = "Middleware (Advanced)"
+title = "Middleware (Net/http)"
 description = "This example will show how to create a more advanced version of middleware in the Go programming language."
 +++
 
 # [Go Web Examples:](/) Middleware (Advanced)
 
-This example will show how to create a more advanced version of middleware in Go.
-
-A middleware in itself simply takes a `http.HandlerFunc` as one of its parameters, wraps it and returns a new `http.HandlerFunc` for the server to call.
-
-Here we define a new type `Middleware` which makes it eventually easier to chain multiple middlewares together. This idea is inspired by Mat Ryers' talk about Building APIs.
-You can find a more detailed explaination including the talk <a target="_blank" href="https://medium.com/@matryer/writing-middleware-in-golang-and-how-go-makes-it-so-much-fun-4375c1246e81">here</a>.
+Most of the middleware that you will use are not created only for Iris, they are created for the standard `net/http` package.
+So how Iris can play with them? Iris plays nice with `net/http` package as a low-level acccess framework. You can wrap a `http.Handler` or a  middleware of form `func(http.ResponseWriter, *http.Request, next http.HandlerFunc)` with the `iris.ToHandler(h)` and you will receive an `iris.HandlerFunc` which you can use to the entire framework!
 
 <br />
 This snippet explains in detail how a new middleware is created. In the full example below, we reduce this version by some boilerplate code.
-{{< highlight go >}}
+```
 func createNewMiddleware() Middleware {
 
 	// Create a new Middleware
@@ -37,10 +33,10 @@ func createNewMiddleware() Middleware {
 	// Return newly created middleware
 	return middleware
 }
-{{< / highlight >}}
+```
 <br />
 This is the full example:
-{{< highlight go >}}
+```
 // advanced-middleware.go
 package main
 
@@ -109,8 +105,8 @@ func main() {
 	http.HandleFunc("/", Chain(Hello, Method("GET"), Logging()))
 	http.ListenAndServe(":8080", nil)
 }
-{{< / highlight >}}
-{{< highlight console >}}
+```
+```
 $ go run advanced-middleware.go
 2017/02/11 00:34:53 / 0s
 
@@ -119,6 +115,4 @@ hello world
 
 $ curl -s -XPOST http://localhost:8080/
 Bad Request
-{{< / highlight >}}
-
-
+```

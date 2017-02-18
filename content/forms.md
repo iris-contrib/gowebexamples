@@ -8,13 +8,14 @@ description = "This example will show how to simulate a contact form and parse t
 
 This example will show how to simulate a contact form and parse the message into a struct.
 
-{{< highlight go >}}
+```
 // forms.go
 package main
 
 import (
-	"html/template"
-	"net/http"
+	"gopkg.in/kataras/iris.v6"
+	"gopkg.in/kataras/iris.v6/adaptors/httprouter"
+	"gopkg.in/kataras/iris.v6/adaptors/view"
 )
 
 type ContactDetails struct {
@@ -24,31 +25,36 @@ type ContactDetails struct {
 }
 
 func main() {
-	tmpl := template.Must(template.ParseFiles("forms.html"))
+	app := iris.New()
+	app.Adapt(httprouter.New())
 
-	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		if r.Method != http.MethodPost {
-			tmpl.Execute(w, nil)
-			return
-		}
+	// Parse all files inside `./mytemplates` directory ending with `.html`
+	app.Adapt(view.HTML("./mytemplates", ".html"))
+
+	app.Get("/", func(ctx *iris.Context) {
+		ctx.Render("forms.html", nil)
+	}
+
+	// Equivalent with app.HandleFunc("POST", ...)
+	app.Post("/", func(ctx *iris.Context){
 
 		details := ContactDetails{
-			Email:   r.FormValue("email"),
-			Subject: r.FormValue("subject"),
-			Message: r.FormValue("message"),
+			Email:   ctx.FormValue("email"),
+			Subject: ctx.FormValue("subject"),
+			Message: ctx.FormValue("message"),
 		}
 
 		// do something with details
 		_ = details
 
-		tmpl.Execute(w, struct{ Success bool }{true})
+		ctx.Render("forms.html", struct{ Success bool }{true})
 	})
 
-	http.ListenAndServe(":8080", nil)
+	app.Listen(":8080")
 }
-{{< / highlight >}}
-{{< highlight html >}}
-<!-- forms.html -->
+```
+```
+<!-- mytemplates/forms.html -->
 {{if .Success}}
 	<h1>Thanks for your message!</h1>
 {{else}}
@@ -63,10 +69,10 @@ func main() {
 		<input type="submit">
 	</form>
 {{end}}
-{{< / highlight >}}
-{{< highlight console >}}
+```
+```
 $ go run forms.go
-{{< / highlight >}}
+```
 <div class="demo">
 	<h1>Contact</h1>
 	<form method="POST">

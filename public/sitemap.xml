@@ -2,55 +2,55 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
-    <loc>https://gowebexamples.github.io/hello-world/</loc>
+    <loc>https://docs.iris-go.com/hello-world/</loc>
   </url>
   
   <url>
-    <loc>https://gowebexamples.github.io/routes/</loc>
+    <loc>https://docs.iris-go.com/routes-using-httprouter/</loc>
   </url>
   
   <url>
-    <loc>https://gowebexamples.github.io/routes-using-gorilla-mux/</loc>
+    <loc>https://docs.iris-go.com/routes-using-gorilla-mux/</loc>
   </url>
   
   <url>
-    <loc>https://gowebexamples.github.io/templates/</loc>
+    <loc>https://docs.iris-go.com/templates/</loc>
   </url>
   
   <url>
-    <loc>https://gowebexamples.github.io/forms/</loc>
+    <loc>https://docs.iris-go.com/forms/</loc>
   </url>
   
   <url>
-    <loc>https://gowebexamples.github.io/json/</loc>
+    <loc>https://docs.iris-go.com/json/</loc>
   </url>
   
   <url>
-    <loc>https://gowebexamples.github.io/static-files/</loc>
+    <loc>https://docs.iris-go.com/static-files/</loc>
   </url>
   
   <url>
-    <loc>https://gowebexamples.github.io/sessions/</loc>
+    <loc>https://docs.iris-go.com/sessions/</loc>
   </url>
   
   <url>
-    <loc>https://gowebexamples.github.io/password-hashing/</loc>
+    <loc>https://docs.iris-go.com/password-hashing/</loc>
   </url>
   
   <url>
-    <loc>https://gowebexamples.github.io/websockets/</loc>
+    <loc>https://docs.iris-go.com/websockets/</loc>
   </url>
   
   <url>
-    <loc>https://gowebexamples.github.io/basic-middleware/</loc>
+    <loc>https://docs.iris-go.com/middleware/</loc>
   </url>
   
   <url>
-    <loc>https://gowebexamples.github.io/advanced-middleware/</loc>
+    <loc>https://docs.iris-go.com/middleware-nethttp/</loc>
   </url>
   
   <url>
-    <loc>https://gowebexamples.github.io/</loc>
+    <loc>https://docs.iris-go.com/</loc>
     <priority>0</priority>
   </url>
   

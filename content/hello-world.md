@@ -8,26 +8,32 @@ description = "This example will show how to start a webserver on port 8080 and 
 
 This example will show how to start a webserver on port 8080 and print the classic "hello world" message.
 
-{{< highlight go >}}
+```
 // hello-world.go
 package main
 
 import (
-	"fmt"
-	"net/http"
+	"gopkg.in/kataras/iris.v6"
+	"gopkg.in/kataras/iris.v6/adaptors/httprouter"
 )
 
 func main() {
-	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		fmt.Fprintln(w, "hello world")
+  app := iris.New()
+	// Adapt the "httprouter", faster,
+	// but it has limits on named path parameters' validation,
+	// you can adapt "gorillamux" if you need regexp path validation!
+	app.Adapt(httprouter.New())
+
+	app.HandleFunc("GET", "/", func(ctx *iris.Context) {
+		ctx.Writef("hello world\n")
 	})
 
-	http.ListenAndServe(":8080", nil)
+	app.Listen(":8080")
 }
-{{< / highlight >}}
-{{< highlight console >}}
+```
+```
 $ go run hello-world.go
 
 $ curl -s http://localhost:8080/
 hello world
-{{< / highlight >}}
+```

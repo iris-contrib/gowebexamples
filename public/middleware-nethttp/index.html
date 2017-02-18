@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	
+		<title>Iris Go Web Examples: Middleware (Net/http)</title>
+	
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+	<meta name="description" content="This example will show how to create a more advanced version of middleware in the Go programming language." />
+	<link rel="alternate" type="application/rss+xml" href="/index.xml" />
+	<link rel="canonical" href="https://docs.iris-go.com/middleware-nethttp/">
+	<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+	<link rel="icon" type="image/png" href="/favicon-32x32.png" sizes="32x32">
+	<link rel="icon" type="image/png" href="/favicon-16x16.png" sizes="16x16">
+	<meta name="theme-color" content="#bb8844">
+	<style>
+		body {
+			margin: 0;
+			font-family: -apple-system, "San Francisco", "Helvetica Neue", "Noto",  "Roboto", "Calibri Light", sans-serif;
+			color: #212121;
+			font-size: 1.1em;
+			line-height: 1.6;
+		}
+		.container { max-width: 700px; margin: auto; padding: 15px; }
+		a {	color: black; }
+		p { font-family: "Georgia", serif; margin: 0.5em 0; }
+		h1 { margin: 1em 0; }
+		h1 a { text-decoration: none; }
+		h2 { font-size: 1.2em; margin: 0.5em 0; }
+		pre { padding: 15px; overflow-x: auto; background: #fafafa; border: 1px solid #f0f0f0; }
+		.demo pre { background-color: white; border: none; margin: 1em 0 0 0; padding: 0; }
+		a[target="_blank"] { background: url(/link.svg) right top/9px no-repeat; padding-right: 12px; }
+		.links { display: flex; justify-content: space-between; }
+		a.back { text-decoration: none; }
+		a.home { text-decoration: none; }
+		a.forward { text-decoration: none; }
+		.footer { font-size: .9em; margin-top: 1em; color: #999; font-family: "Georgia", serif; }
+		.footer a { color: #999; }
+		.image { border: 1px solid #f0f0f0; }
+		.image img { max-width: 100%; height: auto; display: block; }
+		.demo { border: 1px solid #f0f0f0; padding: 15px; line-height: 1.4; pointer-events: none; }
+		.demo h1 { margin: 0 0 0.5em 0; font-size: 1.5em; }
+		.demo input[type=text], .demo textarea { box-sizing: border-box; width: 100%; max-width: 20em; }
+	</style>
+</head>
+<body>
+<div class="container">
+
+
+
+<h1 id="go-web-examples-middleware-advanced"><a href="/">Go Web Examples:</a> Middleware (Advanced)</h1>
+
+<p>Most of the middleware that you will use are not created only for Iris, they are created for the standard <code>net/http</code> package.
+So how Iris can play with them? Iris plays nice with <code>net/http</code> package as a low-level acccess framework. You can wrap a <code>http.Handler</code> or a  middleware of form <code>func(http.ResponseWriter, *http.Request, next http.HandlerFunc)</code> with the <code>iris.ToHandler(h)</code> and you will receive an <code>iris.HandlerFunc</code> which you can use to the entire framework!</p>
+
+<p><br />
+This snippet explains in detail how a new middleware is created. In the full example below, we reduce this version by some boilerplate code.</p>
+
+<pre><code>func createNewMiddleware() Middleware {
+
+    // Create a new Middleware
+    middleware := func(next http.HandlerFunc) http.HandlerFunc {
+
+        // Define the http.HandlerFunc which is called by the server eventually
+        handler := func(w http.ResponseWriter, r *http.Request) {
+
+            // ... do middleware things
+
+            // Call the next middleware/handler in chain
+            next(w, r)
+        }
+
+        // Return newly created handler
+        return handler
+    }
+
+    // Return newly created middleware
+    return middleware
+}
+</code></pre>
+
+<p><br />
+This is the full example:</p>
+
+<pre><code>// advanced-middleware.go
+package main
+
+import (
+    &quot;fmt&quot;
+    &quot;log&quot;
+    &quot;net/http&quot;
+    &quot;time&quot;
+)
+
+type Middleware func(http.HandlerFunc) http.HandlerFunc
+
+// Logging logs all requests with its path and the time it took to process
+func Logging() Middleware {
+
+    // Create a new Middleware
+    return func(f http.HandlerFunc) http.HandlerFunc {
+
+        // Define the http.HandlerFunc
+        return func(w http.ResponseWriter, r *http.Request) {
+
+            // Do middleware things
+            start := time.Now()
+            defer func() { log.Println(r.URL.Path, time.Since(start)) }()
+
+            // Call the next middleware/handler in chain
+            f(w, r)
+        }
+    }
+}
+
+// Method ensures that only a url can me requested with a specific method, else returns a 400 Bad Request
+func Method(m string) Middleware {
+
+    // Create a new Middleware
+    return func(f http.HandlerFunc) http.HandlerFunc {
+
+        // Define the http.HandlerFunc
+        return func(w http.ResponseWriter, r *http.Request) {
+
+            // Do middleware things
+            if r.Method != m {
+                http.Error(w, http.StatusText(http.StatusBadRequest), http.StatusBadRequest)
+                return
+            }
+
+            // Call the next middleware/handler in chain
+            f(w, r)
+        }
+    }
+}
+
+// Chain applies middlewares to a http.HandlerFunc
+func Chain(f http.HandlerFunc, middlewares ...Middleware) http.HandlerFunc {
+    for _, m := range middlewares {
+        f = m(f)
+    }
+    return f
+}
+
+func Hello(w http.ResponseWriter, r *http.Request) {
+    fmt.Fprintln(w, &quot;hello world&quot;)
+}
+
+func main() {
+    http.HandleFunc(&quot;/&quot;, Chain(Hello, Method(&quot;GET&quot;), Logging()))
+    http.ListenAndServe(&quot;:8080&quot;, nil)
+}
+</code></pre>
+
+<pre><code>$ go run advanced-middleware.go
+2017/02/11 00:34:53 / 0s
+
+$ curl -s http://localhost:8080/
+hello world
+
+$ curl -s -XPOST http://localhost:8080/
+Bad Request
+</code></pre>
+
+	<div class="footer">
+		<div class="links">
+		
+			
+			<a title="Middleware (Basic)" class="back" href="https://docs.iris-go.com/middleware/">← back</a>
+			
+			<a title="Iris Go Web Examples" class="home" href="/">home</a>
+			
+			<a title="Iris Go Web Examples" class="forward" href="https://docs.iris-go.com/">forward →</a>
+			
+		
+		</div>
+		<br /><br />
+		 <a href="https://github.com/kataras/iris">Iris web framework</a>
+	</div>
+</div>
+</body>
+</html>

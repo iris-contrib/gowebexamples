@@ -1,212 +1,257 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Go Web Examples</title>
-    <link>https://gowebexamples.github.io/index.xml</link>
-    <description>Recent content on Go Web Examples</description>
+    <title>Iris Go Web Examples</title>
+    <link>https://docs.iris-go.com/index.xml</link>
+    <description>Recent content on Iris Go Web Examples</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <atom:link href="https://gowebexamples.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="https://docs.iris-go.com/index.xml" rel="self" type="application/rss+xml" />
     
     <item>
       <title>Hello World</title>
-      <link>https://gowebexamples.github.io/hello-world/</link>
+      <link>https://docs.iris-go.com/hello-world/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
-      <guid>https://gowebexamples.github.io/hello-world/</guid>
+      <guid>https://docs.iris-go.com/hello-world/</guid>
       <description>
 
-&lt;h1 id=&#34;go-web-examples-hello-world&#34;&gt;&lt;a href=&#34;https://gowebexamples.github.io/&#34;&gt;Go Web Examples:&lt;/a&gt; Hello World&lt;/h1&gt;
+&lt;h1 id=&#34;go-web-examples-hello-world&#34;&gt;&lt;a href=&#34;https://docs.iris-go.com/&#34;&gt;Go Web Examples:&lt;/a&gt; Hello World&lt;/h1&gt;
 
 &lt;p&gt;This example will show how to start a webserver on port 8080 and print the classic &amp;ldquo;hello world&amp;rdquo; message.&lt;/p&gt;
 
-&lt;p&gt;&lt;div class=&#34;highlight&#34; style=&#34;background: #ffffff&#34;&gt;&lt;pre style=&#34;line-height: 125%&#34;&gt;&lt;span&gt;&lt;/span&gt;&lt;span style=&#34;color: #999988; font-style: italic&#34;&gt;// hello-world.go&lt;/span&gt;
-&lt;span style=&#34;font-weight: bold&#34;&gt;package&lt;/span&gt; main
+&lt;pre&gt;&lt;code&gt;// hello-world.go
+package main
 
-&lt;span style=&#34;font-weight: bold&#34;&gt;import&lt;/span&gt; (
-	&lt;span style=&#34;color: #bb8844&#34;&gt;&amp;quot;fmt&amp;quot;&lt;/span&gt;
-	&lt;span style=&#34;color: #bb8844&#34;&gt;&amp;quot;net/http&amp;quot;&lt;/span&gt;
+import (
+    &amp;quot;gopkg.in/kataras/iris.v6&amp;quot;
+    &amp;quot;gopkg.in/kataras/iris.v6/adaptors/httprouter&amp;quot;
 )
 
-&lt;span style=&#34;font-weight: bold&#34;&gt;func&lt;/span&gt; main() {
-	http.HandleFunc(&lt;span style=&#34;color: #bb8844&#34;&gt;&amp;quot;/&amp;quot;&lt;/span&gt;, &lt;span style=&#34;font-weight: bold&#34;&gt;func&lt;/span&gt;(w http.ResponseWriter, r &lt;span style=&#34;font-weight: bold&#34;&gt;*&lt;/span&gt;http.Request) {
-		fmt.Fprintln(w, &lt;span style=&#34;color: #bb8844&#34;&gt;&amp;quot;hello world&amp;quot;&lt;/span&gt;)
-	})
+func main() {
+  app := iris.New()
+    // Adapt the &amp;quot;httprouter&amp;quot;, faster,
+    // but it has limits on named path parameters&#39; validation,
+    // you can adapt &amp;quot;gorillamux&amp;quot; if you need regexp path validation!
+    app.Adapt(httprouter.New())
 
-	http.ListenAndServe(&lt;span style=&#34;color: #bb8844&#34;&gt;&amp;quot;:8080&amp;quot;&lt;/span&gt;, &lt;span style=&#34;font-weight: bold&#34;&gt;nil&lt;/span&gt;)
+    app.HandleFunc(&amp;quot;GET&amp;quot;, &amp;quot;/&amp;quot;, func(ctx *iris.Context) {
+        ctx.Writef(&amp;quot;hello world\n&amp;quot;)
+    })
+
+    app.Listen(&amp;quot;:8080&amp;quot;)
 }
-&lt;/pre&gt;&lt;/div&gt;
+&lt;/code&gt;&lt;/pre&gt;
 
-&lt;div class=&#34;highlight&#34; style=&#34;background: #ffffff&#34;&gt;&lt;pre style=&#34;line-height: 125%&#34;&gt;&lt;span&gt;&lt;/span&gt;&lt;span style=&#34;color: #555555&#34;&gt;$&lt;/span&gt; go run hello-world.go
+&lt;pre&gt;&lt;code&gt;$ go run hello-world.go
 
-&lt;span style=&#34;color: #555555&#34;&gt;$&lt;/span&gt; curl -s http://localhost:8080/
-&lt;span style=&#34;color: #888888&#34;&gt;hello world&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-&lt;/p&gt;
+$ curl -s http://localhost:8080/
+hello world
+&lt;/code&gt;&lt;/pre&gt;
 </description>
     </item>
     
     <item>
-      <title>Routes</title>
-      <link>https://gowebexamples.github.io/routes/</link>
+      <title>Routes (using httprouter)</title>
+      <link>https://docs.iris-go.com/routes-using-httprouter/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
-      <guid>https://gowebexamples.github.io/routes/</guid>
+      <guid>https://docs.iris-go.com/routes-using-httprouter/</guid>
       <description>
 
-&lt;h1 id=&#34;go-web-examples-routes&#34;&gt;&lt;a href=&#34;https://gowebexamples.github.io/&#34;&gt;Go Web Examples:&lt;/a&gt; Routes&lt;/h1&gt;
+&lt;h1 id=&#34;go-web-examples-routes-using-httprouter&#34;&gt;&lt;a href=&#34;https://docs.iris-go.com/&#34;&gt;Go Web Examples:&lt;/a&gt; Routes (using httprouter)&lt;/h1&gt;
 
-&lt;p&gt;This example will show how to register a route and get the data using just the &lt;code&gt;net/http&lt;/code&gt; package.&lt;/p&gt;
+&lt;p&gt;This example will show how to register routes using the popular &lt;a target=&#34;_blank&#34; href=&#34;https://github.com/julienschmidt/httprouter&#34;&gt;httprouter&lt;/a&gt; router.&lt;/p&gt;
 
-&lt;p&gt;&lt;div class=&#34;highlight&#34; style=&#34;background: #ffffff&#34;&gt;&lt;pre style=&#34;line-height: 125%&#34;&gt;&lt;span&gt;&lt;/span&gt;&lt;span style=&#34;color: #999988; font-style: italic&#34;&gt;// routes.go&lt;/span&gt;
-&lt;span style=&#34;font-weight: bold&#34;&gt;package&lt;/span&gt; main
+&lt;pre&gt;&lt;code&gt;// routes.go
+package main
 
-&lt;span style=&#34;font-weight: bold&#34;&gt;import&lt;/span&gt; (
-	&lt;span style=&#34;color: #bb8844&#34;&gt;&amp;quot;fmt&amp;quot;&lt;/span&gt;
-	&lt;span style=&#34;color: #bb8844&#34;&gt;&amp;quot;net/http&amp;quot;&lt;/span&gt;
+import (
+    &amp;quot;gopkg.in/kataras/iris.v6&amp;quot;
+    &amp;quot;gopkg.in/kataras/iris.v6/adaptors/httprouter&amp;quot;
 )
 
-&lt;span style=&#34;font-weight: bold&#34;&gt;func&lt;/span&gt; main() {
-	userAges &lt;span style=&#34;font-weight: bold&#34;&gt;:=&lt;/span&gt; &lt;span style=&#34;font-weight: bold&#34;&gt;map&lt;/span&gt;[&lt;span style=&#34;color: #445588; font-weight: bold&#34;&gt;string&lt;/span&gt;]&lt;span style=&#34;color: #445588; font-weight: bold&#34;&gt;int&lt;/span&gt;{
-		&lt;span style=&#34;color: #bb8844&#34;&gt;&amp;quot;Alice&amp;quot;&lt;/span&gt;:  &lt;span style=&#34;color: #009999&#34;&gt;25&lt;/span&gt;,
-		&lt;span style=&#34;color: #bb8844&#34;&gt;&amp;quot;Bob&amp;quot;&lt;/span&gt;:    &lt;span style=&#34;color: #009999&#34;&gt;30&lt;/span&gt;,
-		&lt;span style=&#34;color: #bb8844&#34;&gt;&amp;quot;Claire&amp;quot;&lt;/span&gt;: &lt;span style=&#34;color: #009999&#34;&gt;29&lt;/span&gt;,
-	}
+func main() {
+  app := iris.New()
+    app.Adapt(httprouter.New())
 
-	http.HandleFunc(&lt;span style=&#34;color: #bb8844&#34;&gt;&amp;quot;/users/&amp;quot;&lt;/span&gt;, &lt;span style=&#34;font-weight: bold&#34;&gt;func&lt;/span&gt;(w http.ResponseWriter, r &lt;span style=&#34;font-weight: bold&#34;&gt;*&lt;/span&gt;http.Request) {
-		name &lt;span style=&#34;font-weight: bold&#34;&gt;:=&lt;/span&gt; r.URL.Path[&lt;span style=&#34;color: #999999&#34;&gt;len&lt;/span&gt;(&lt;span style=&#34;color: #bb8844&#34;&gt;&amp;quot;/users/&amp;quot;&lt;/span&gt;):]
-		age &lt;span style=&#34;font-weight: bold&#34;&gt;:=&lt;/span&gt; userAges[name]
+    userAges := map[string]int{
+        &amp;quot;Alice&amp;quot;:  25,
+        &amp;quot;Bob&amp;quot;:    30,
+        &amp;quot;Claire&amp;quot;: 29,
+    }
 
-		fmt.Fprintf(w, &lt;span style=&#34;color: #bb8844&#34;&gt;&amp;quot;%s is %d years old!&amp;quot;&lt;/span&gt;, name, age)
-	})
+  // Equivalent with app.HandleFunc(&amp;quot;GET&amp;quot;, ...)
+    app.Get(&amp;quot;/users/:name&amp;quot;, func(ctx *iris.Context) {
+        name := ctx.Param(&amp;quot;name&amp;quot;)
+        age := userAges[name]
 
-	http.ListenAndServe(&lt;span style=&#34;color: #bb8844&#34;&gt;&amp;quot;:8080&amp;quot;&lt;/span&gt;, &lt;span style=&#34;font-weight: bold&#34;&gt;nil&lt;/span&gt;)
+        ctx.Writef(&amp;quot;%s is %d years old!&amp;quot;, name, age)
+    })
+
+    app.Listen(&amp;quot;:8080&amp;quot;)
 }
-&lt;/pre&gt;&lt;/div&gt;
+&lt;/code&gt;&lt;/pre&gt;
 
-&lt;div class=&#34;highlight&#34; style=&#34;background: #ffffff&#34;&gt;&lt;pre style=&#34;line-height: 125%&#34;&gt;&lt;span&gt;&lt;/span&gt;&lt;span style=&#34;color: #555555&#34;&gt;$&lt;/span&gt; go run routes.go
+&lt;pre&gt;&lt;code&gt;$ go run routes.go
 
-&lt;span style=&#34;color: #555555&#34;&gt;$&lt;/span&gt; curl -s http://localhost:8080/users/Bob
-&lt;span style=&#34;color: #888888&#34;&gt;Bob is 30 years old!&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-&lt;/p&gt;
+$ curl -s http://localhost:8080/users/Bob
+Bob is 30 years old!
+&lt;/code&gt;&lt;/pre&gt;
 </description>
     </item>
     
     <item>
-      <title>Routes (using gorilla/mux)</title>
-      <link>https://gowebexamples.github.io/routes-using-gorilla-mux/</link>
+      <title>Routes (using gorillamux)</title>
+      <link>https://docs.iris-go.com/routes-using-gorilla-mux/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
-      <guid>https://gowebexamples.github.io/routes-using-gorilla-mux/</guid>
+      <guid>https://docs.iris-go.com/routes-using-gorilla-mux/</guid>
       <description>
 
-&lt;h1 id=&#34;go-web-examples-routes-using-gorilla-mux&#34;&gt;&lt;a href=&#34;https://gowebexamples.github.io/&#34;&gt;Go Web Examples:&lt;/a&gt; Routes (using gorilla/mux)&lt;/h1&gt;
+&lt;h1 id=&#34;go-web-examples-routes-using-gorillamux&#34;&gt;&lt;a href=&#34;https://docs.iris-go.com/&#34;&gt;Go Web Examples:&lt;/a&gt; Routes (using gorillamux)&lt;/h1&gt;
 
-&lt;p&gt;This example will show how to register routes using the popular &lt;a target=&#34;_blank&#34; href=&#34;https://github.com/gorilla/mux&#34;&gt;gorilla/mux&lt;/a&gt; router.
-It is compatible with the router from the standard &lt;code&gt;net/http&lt;/code&gt; package but adds a few extra features like named url parameters and http method restrictions to remove some boilerplate code.&lt;/p&gt;
+&lt;p&gt;This example will show how to register routes using the popular &lt;a target=&#34;_blank&#34; href=&#34;https://github.com/gorilla/mux&#34;&gt;gorillamux&lt;/a&gt; router.&lt;/p&gt;
 
-&lt;p&gt;To use the library we will have to install it first like so:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;// routes.go
+package main
 
-&lt;p&gt;&lt;code&gt;$ go get github.com/gorilla/mux&lt;/code&gt;&lt;/p&gt;
-
-&lt;p&gt;From now on, every application we write will be able to make use of this library.&lt;/p&gt;
-
-&lt;p&gt;&lt;div class=&#34;highlight&#34; style=&#34;background: #ffffff&#34;&gt;&lt;pre style=&#34;line-height: 125%&#34;&gt;&lt;span&gt;&lt;/span&gt;&lt;span style=&#34;color: #999988; font-style: italic&#34;&gt;// routes.go&lt;/span&gt;
-&lt;span style=&#34;font-weight: bold&#34;&gt;package&lt;/span&gt; main
-
-&lt;span style=&#34;font-weight: bold&#34;&gt;import&lt;/span&gt; (
-	&lt;span style=&#34;color: #bb8844&#34;&gt;&amp;quot;fmt&amp;quot;&lt;/span&gt;
-	&lt;span style=&#34;color: #bb8844&#34;&gt;&amp;quot;net/http&amp;quot;&lt;/span&gt;
-
-	&lt;span style=&#34;color: #bb8844&#34;&gt;&amp;quot;github.com/gorilla/mux&amp;quot;&lt;/span&gt;
+import (
+    &amp;quot;gopkg.in/kataras/iris.v6&amp;quot;
+    &amp;quot;gopkg.in/kataras/iris.v6/adaptors/gorillamux&amp;quot;
 )
 
-&lt;span style=&#34;font-weight: bold&#34;&gt;func&lt;/span&gt; main() {
-	userAges &lt;span style=&#34;font-weight: bold&#34;&gt;:=&lt;/span&gt; &lt;span style=&#34;font-weight: bold&#34;&gt;map&lt;/span&gt;[&lt;span style=&#34;color: #445588; font-weight: bold&#34;&gt;string&lt;/span&gt;]&lt;span style=&#34;color: #445588; font-weight: bold&#34;&gt;int&lt;/span&gt;{
-		&lt;span style=&#34;color: #bb8844&#34;&gt;&amp;quot;Alice&amp;quot;&lt;/span&gt;:  &lt;span style=&#34;color: #009999&#34;&gt;25&lt;/span&gt;,
-		&lt;span style=&#34;color: #bb8844&#34;&gt;&amp;quot;Bob&amp;quot;&lt;/span&gt;:    &lt;span style=&#34;color: #009999&#34;&gt;30&lt;/span&gt;,
-		&lt;span style=&#34;color: #bb8844&#34;&gt;&amp;quot;Claire&amp;quot;&lt;/span&gt;: &lt;span style=&#34;color: #009999&#34;&gt;29&lt;/span&gt;,
-	}
+func main() {
+  app := iris.New()
+    // Adapt the &amp;quot;httprouter&amp;quot;, you can use &amp;quot;gorillamux&amp;quot; too.
+    app.Adapt(gorillamux.New())
 
-	r &lt;span style=&#34;font-weight: bold&#34;&gt;:=&lt;/span&gt; mux.NewRouter()
-	r.HandleFunc(&lt;span style=&#34;color: #bb8844&#34;&gt;&amp;quot;/users/{name}&amp;quot;&lt;/span&gt;, &lt;span style=&#34;font-weight: bold&#34;&gt;func&lt;/span&gt;(w http.ResponseWriter, r &lt;span style=&#34;font-weight: bold&#34;&gt;*&lt;/span&gt;http.Request) {
-		vars &lt;span style=&#34;font-weight: bold&#34;&gt;:=&lt;/span&gt; mux.Vars(r)
-		name &lt;span style=&#34;font-weight: bold&#34;&gt;:=&lt;/span&gt; vars[&lt;span style=&#34;color: #bb8844&#34;&gt;&amp;quot;name&amp;quot;&lt;/span&gt;]
-		age &lt;span style=&#34;font-weight: bold&#34;&gt;:=&lt;/span&gt; userAges[name]
+    userAges := map[string]int{
+        &amp;quot;Alice&amp;quot;:  25,
+        &amp;quot;Bob&amp;quot;:    30,
+        &amp;quot;Claire&amp;quot;: 29,
+    }
 
-		fmt.Fprintf(w, &lt;span style=&#34;color: #bb8844&#34;&gt;&amp;quot;%s is %d years old!&amp;quot;&lt;/span&gt;, name, age)
-	}).Methods(&lt;span style=&#34;color: #bb8844&#34;&gt;&amp;quot;GET&amp;quot;&lt;/span&gt;)
+  // Equivalent with app.HandleFunc(&amp;quot;GET&amp;quot;, ...)
+    app.Get(&amp;quot;/users/{name}&amp;quot;, func(ctx *iris.Context) {
+        name := ctx.Param(&amp;quot;name&amp;quot;)
+        age := userAges[name]
 
-	http.ListenAndServe(&lt;span style=&#34;color: #bb8844&#34;&gt;&amp;quot;:8080&amp;quot;&lt;/span&gt;, r)
+        ctx.Writef(&amp;quot;%s is %d years old!&amp;quot;, name, age)
+    })
+
+    app.Listen(&amp;quot;:8080&amp;quot;)
 }
-&lt;/pre&gt;&lt;/div&gt;
+&lt;/code&gt;&lt;/pre&gt;
 
-&lt;div class=&#34;highlight&#34; style=&#34;background: #ffffff&#34;&gt;&lt;pre style=&#34;line-height: 125%&#34;&gt;&lt;span&gt;&lt;/span&gt;&lt;span style=&#34;color: #555555&#34;&gt;$&lt;/span&gt; go run routes.go
+&lt;pre&gt;&lt;code&gt;$ go run routes.go
 
-&lt;span style=&#34;color: #555555&#34;&gt;$&lt;/span&gt; curl -s http://localhost:8080/users/Bob
-&lt;span style=&#34;color: #888888&#34;&gt;Bob is 30 years old!&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-&lt;/p&gt;
+$ curl -s http://localhost:8080/users/Bob
+Bob is 30 years old!
+&lt;/code&gt;&lt;/pre&gt;
 </description>
     </item>
     
     <item>
       <title>Templates</title>
-      <link>https://gowebexamples.github.io/templates/</link>
+      <link>https://docs.iris-go.com/templates/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
-      <guid>https://gowebexamples.github.io/templates/</guid>
+      <guid>https://docs.iris-go.com/templates/</guid>
       <description>
 
-&lt;h1 id=&#34;go-web-examples-templates&#34;&gt;&lt;a href=&#34;https://gowebexamples.github.io/&#34;&gt;Go Web Examples:&lt;/a&gt; Templates&lt;/h1&gt;
+&lt;h1 id=&#34;go-web-examples-templates&#34;&gt;&lt;a href=&#34;https://docs.iris-go.com/&#34;&gt;Go Web Examples:&lt;/a&gt; Templates&lt;/h1&gt;
 
-&lt;p&gt;This example will show how to render a simple list of TODO items into an html page using the &lt;code&gt;html/template&lt;/code&gt; package.&lt;/p&gt;
+&lt;p&gt;This example will show how to render a simple list of TODO items into an html page using the &lt;code&gt;html/template view adaptor&lt;/code&gt;.&lt;/p&gt;
 
-&lt;p&gt;&lt;div class=&#34;highlight&#34; style=&#34;background: #ffffff&#34;&gt;&lt;pre style=&#34;line-height: 125%&#34;&gt;&lt;span&gt;&lt;/span&gt;&lt;span style=&#34;color: #999988; font-style: italic&#34;&gt;// todos.go&lt;/span&gt;
-&lt;span style=&#34;font-weight: bold&#34;&gt;package&lt;/span&gt; main
+&lt;p&gt;Iris supports 5 template engines out-of-the-box, you can still use any external golang template engine,
+as &lt;code&gt;context.ResponseWriter&lt;/code&gt; is an &lt;code&gt;io.Writer&lt;/code&gt; and &lt;code&gt;http.ResponseWriter&lt;/code&gt;.&lt;/p&gt;
 
-&lt;span style=&#34;font-weight: bold&#34;&gt;import&lt;/span&gt; (
-	&lt;span style=&#34;color: #bb8844&#34;&gt;&amp;quot;html/template&amp;quot;&lt;/span&gt;
-	&lt;span style=&#34;color: #bb8844&#34;&gt;&amp;quot;net/http&amp;quot;&lt;/span&gt;
+&lt;p&gt;All of these five template engines have common features with common API,
+like Layout, Template Funcs, Party-specific layout, partial rendering and more.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;  The standard html, based on github.com/kataras/go-template/tree/master/html
+  its template parser is the golang.org/pkg/html/template/.
+
+  Django, based ongithub.com/kataras/go-template/tree/master/django
+  its template parser is the github.com/flosch/pongo2
+
+  Pug(Jade), based on github.com/kataras/go-template/tree/master/pug
+  its template parser is the github.com/Joker/jade
+
+  Handlebars, based on github.com/kataras/go-template/tree/master/handlebars
+  its template parser is the github.com/aymerick/raymond
+
+  Amber, based on github.com/kataras/go-template/tree/master/amber
+  its template parser is the github.com/eknkc/amber
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;View engine is the &lt;code&gt;adaptors/view&lt;/code&gt; package.&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;standard html  | view.HTML(&amp;hellip;)&lt;/li&gt;
+&lt;li&gt;django         | view.Django(&amp;hellip;)&lt;/li&gt;
+&lt;li&gt;pug(jade)      | view.Pug(&amp;hellip;)&lt;/li&gt;
+&lt;li&gt;handlebars     | view.Handlebars(&amp;hellip;)&lt;/li&gt;
+&lt;li&gt;amber          | view.Amber(&amp;hellip;)&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;pre&gt;&lt;code&gt;// todos.go
+package main
+
+import (
+    &amp;quot;gopkg.in/kataras/iris.v6&amp;quot;
+    &amp;quot;gopkg.in/kataras/iris.v6/adaptors/httprouter&amp;quot;
+    &amp;quot;gopkg.in/kataras/iris.v6/adaptors/view&amp;quot;
 )
 
-&lt;span style=&#34;font-weight: bold&#34;&gt;type&lt;/span&gt; Todo &lt;span style=&#34;font-weight: bold&#34;&gt;struct&lt;/span&gt; {
-	Task &lt;span style=&#34;color: #445588; font-weight: bold&#34;&gt;string&lt;/span&gt;
-	Done &lt;span style=&#34;color: #445588; font-weight: bold&#34;&gt;bool&lt;/span&gt;
+type Todo struct {
+    Task string
+    Done bool
 }
 
-&lt;span style=&#34;font-weight: bold&#34;&gt;func&lt;/span&gt; main() {
-	tmpl &lt;span style=&#34;font-weight: bold&#34;&gt;:=&lt;/span&gt; template.Must(template.ParseFiles(&lt;span style=&#34;color: #bb8844&#34;&gt;&amp;quot;todos.html&amp;quot;&lt;/span&gt;))
-	todos &lt;span style=&#34;font-weight: bold&#34;&gt;:=&lt;/span&gt; []Todo{
-		{&lt;span style=&#34;color: #bb8844&#34;&gt;&amp;quot;Learn Go&amp;quot;&lt;/span&gt;, &lt;span style=&#34;font-weight: bold&#34;&gt;true&lt;/span&gt;},
-		{&lt;span style=&#34;color: #bb8844&#34;&gt;&amp;quot;Read Go Web Examples&amp;quot;&lt;/span&gt;, &lt;span style=&#34;font-weight: bold&#34;&gt;true&lt;/span&gt;},
-		{&lt;span style=&#34;color: #bb8844&#34;&gt;&amp;quot;Create a web app in Go&amp;quot;&lt;/span&gt;, &lt;span style=&#34;font-weight: bold&#34;&gt;false&lt;/span&gt;},
-	}
+func main() {
+  // Configuration is optional
+  app := iris.New(iris.Configuration{Gzip: false, Charset: &amp;quot;UTF-8&amp;quot;})
 
-	http.HandleFunc(&lt;span style=&#34;color: #bb8844&#34;&gt;&amp;quot;/&amp;quot;&lt;/span&gt;, &lt;span style=&#34;font-weight: bold&#34;&gt;func&lt;/span&gt;(w http.ResponseWriter, r &lt;span style=&#34;font-weight: bold&#34;&gt;*&lt;/span&gt;http.Request) {
-		tmpl.Execute(w, &lt;span style=&#34;font-weight: bold&#34;&gt;struct&lt;/span&gt;{ Todos []Todo }{todos})
-	})
+  // Adapt a logger which will print all errors to os.Stdout
+  app.Adapt(iris.DevLogger())
 
-	http.ListenAndServe(&lt;span style=&#34;color: #bb8844&#34;&gt;&amp;quot;:8080&amp;quot;&lt;/span&gt;, &lt;span style=&#34;font-weight: bold&#34;&gt;nil&lt;/span&gt;)
+  // Adapt the httprouter (we will use that on all examples)
+  app.Adapt(httprouter.New())
+
+    // Parse all files inside `./mytemplates` directory ending with `.html`
+    app.Adapt(view.HTML(&amp;quot;./mytemplates&amp;quot;, &amp;quot;.html&amp;quot;))
+
+    todos := []Todo{
+        {&amp;quot;Learn Go&amp;quot;, true},
+        {&amp;quot;Read Go Web Examples&amp;quot;, true},
+        {&amp;quot;Create a web app in Go&amp;quot;, false},
+    }
+
+    app.Get(&amp;quot;/&amp;quot;, func(ctx *iris.Context) {
+      ctx.Render(&amp;quot;todos.html&amp;quot;, struct{ Todos []Todo }{todos})
+    })
+
+    app.Listen(&amp;quot;:8080&amp;quot;)
 }
-&lt;/pre&gt;&lt;/div&gt;
+&lt;/code&gt;&lt;/pre&gt;
 
-&lt;div class=&#34;highlight&#34; style=&#34;background: #ffffff&#34;&gt;&lt;pre style=&#34;line-height: 125%&#34;&gt;&lt;span&gt;&lt;/span&gt;&lt;span style=&#34;color: #999988; font-style: italic&#34;&gt;&amp;lt;!-- todos.html --&amp;gt;&lt;/span&gt;
-&amp;lt;&lt;span style=&#34;color: #000080&#34;&gt;h1&lt;/span&gt;&amp;gt;Todos&amp;lt;/&lt;span style=&#34;color: #000080&#34;&gt;h1&lt;/span&gt;&amp;gt;
-&amp;lt;&lt;span style=&#34;color: #000080&#34;&gt;ul&lt;/span&gt;&amp;gt;
-	{{range .Todos}}
-		{{if .Done}}
-			&amp;lt;&lt;span style=&#34;color: #000080&#34;&gt;li&lt;/span&gt;&amp;gt;&amp;lt;&lt;span style=&#34;color: #000080&#34;&gt;s&lt;/span&gt;&amp;gt;{{.Task}}&amp;lt;/&lt;span style=&#34;color: #000080&#34;&gt;s&lt;/span&gt;&amp;gt;&amp;lt;/&lt;span style=&#34;color: #000080&#34;&gt;li&lt;/span&gt;&amp;gt;
-		{{else}}
-			&amp;lt;&lt;span style=&#34;color: #000080&#34;&gt;li&lt;/span&gt;&amp;gt;{{.Task}}&amp;lt;/&lt;span style=&#34;color: #000080&#34;&gt;li&lt;/span&gt;&amp;gt;
-		{{end}}
-	{{end}}
-&amp;lt;/&lt;span style=&#34;color: #000080&#34;&gt;ul&lt;/span&gt;&amp;gt;
-&lt;/pre&gt;&lt;/div&gt;
+&lt;pre&gt;&lt;code&gt;&amp;lt;!-- mytemplates/todos.html --&amp;gt;
+&amp;lt;h1&amp;gt;Todos&amp;lt;/h1&amp;gt;
+&amp;lt;ul&amp;gt;
+    {{range .Todos}}
+        {{if .Done}}
+            &amp;lt;li&amp;gt;&amp;lt;s&amp;gt;{{.Task}}&amp;lt;/s&amp;gt;&amp;lt;/li&amp;gt;
+        {{else}}
+            &amp;lt;li&amp;gt;{{.Task}}&amp;lt;/li&amp;gt;
+        {{end}}
+    {{end}}
+&amp;lt;/ul&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
 
-&lt;div class=&#34;highlight&#34; style=&#34;background: #ffffff&#34;&gt;&lt;pre style=&#34;line-height: 125%&#34;&gt;&lt;span&gt;&lt;/span&gt;&lt;span style=&#34;color: #555555&#34;&gt;$&lt;/span&gt; go run todos.go
-&lt;/pre&gt;&lt;/div&gt;
+&lt;pre&gt;&lt;code&gt;$ go run todos.go
+&lt;/code&gt;&lt;/pre&gt;
 
 &lt;div class=&#34;demo&#34;&gt;
     &lt;h1&gt;Todos&lt;/h1&gt;
@@ -215,80 +260,86 @@ It is compatible with the router from the standard &lt;code&gt;net/http&lt;/code
         &lt;li&gt;&lt;s&gt;Read Go Web Examples&lt;/s&gt;&lt;/li&gt;
         &lt;li&gt;Create a web app in Go&lt;/li&gt;
     &lt;/ul&gt;
-&lt;/div&gt;&lt;/p&gt;
+&lt;/div&gt;
 </description>
     </item>
     
     <item>
       <title>Forms</title>
-      <link>https://gowebexamples.github.io/forms/</link>
+      <link>https://docs.iris-go.com/forms/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
-      <guid>https://gowebexamples.github.io/forms/</guid>
+      <guid>https://docs.iris-go.com/forms/</guid>
       <description>
 
-&lt;h1 id=&#34;go-web-examples-forms&#34;&gt;&lt;a href=&#34;https://gowebexamples.github.io/&#34;&gt;Go Web Examples:&lt;/a&gt; Forms&lt;/h1&gt;
+&lt;h1 id=&#34;go-web-examples-forms&#34;&gt;&lt;a href=&#34;https://docs.iris-go.com/&#34;&gt;Go Web Examples:&lt;/a&gt; Forms&lt;/h1&gt;
 
 &lt;p&gt;This example will show how to simulate a contact form and parse the message into a struct.&lt;/p&gt;
 
-&lt;p&gt;&lt;div class=&#34;highlight&#34; style=&#34;background: #ffffff&#34;&gt;&lt;pre style=&#34;line-height: 125%&#34;&gt;&lt;span&gt;&lt;/span&gt;&lt;span style=&#34;color: #999988; font-style: italic&#34;&gt;// forms.go&lt;/span&gt;
-&lt;span style=&#34;font-weight: bold&#34;&gt;package&lt;/span&gt; main
+&lt;pre&gt;&lt;code&gt;// forms.go
+package main
 
-&lt;span style=&#34;font-weight: bold&#34;&gt;import&lt;/span&gt; (
-	&lt;span style=&#34;color: #bb8844&#34;&gt;&amp;quot;html/template&amp;quot;&lt;/span&gt;
-	&lt;span style=&#34;color: #bb8844&#34;&gt;&amp;quot;net/http&amp;quot;&lt;/span&gt;
+import (
+    &amp;quot;gopkg.in/kataras/iris.v6&amp;quot;
+    &amp;quot;gopkg.in/kataras/iris.v6/adaptors/httprouter&amp;quot;
+    &amp;quot;gopkg.in/kataras/iris.v6/adaptors/view&amp;quot;
 )
 
-&lt;span style=&#34;font-weight: bold&#34;&gt;type&lt;/span&gt; ContactDetails &lt;span style=&#34;font-weight: bold&#34;&gt;struct&lt;/span&gt; {
-	Email   &lt;span style=&#34;color: #445588; font-weight: bold&#34;&gt;string&lt;/span&gt;
-	Subject &lt;span style=&#34;color: #445588; font-weight: bold&#34;&gt;string&lt;/span&gt;
-	Message &lt;span style=&#34;color: #445588; font-weight: bold&#34;&gt;string&lt;/span&gt;
+type ContactDetails struct {
+    Email   string
+    Subject string
+    Message string
 }
 
-&lt;span style=&#34;font-weight: bold&#34;&gt;func&lt;/span&gt; main() {
-	tmpl &lt;span style=&#34;font-weight: bold&#34;&gt;:=&lt;/span&gt; template.Must(template.ParseFiles(&lt;span style=&#34;color: #bb8844&#34;&gt;&amp;quot;forms.html&amp;quot;&lt;/span&gt;))
+func main() {
+    app := iris.New()
+    app.Adapt(httprouter.New())
 
-	http.HandleFunc(&lt;span style=&#34;color: #bb8844&#34;&gt;&amp;quot;/&amp;quot;&lt;/span&gt;, &lt;span style=&#34;font-weight: bold&#34;&gt;func&lt;/span&gt;(w http.ResponseWriter, r &lt;span style=&#34;font-weight: bold&#34;&gt;*&lt;/span&gt;http.Request) {
-		&lt;span style=&#34;font-weight: bold&#34;&gt;if&lt;/span&gt; r.Method &lt;span style=&#34;font-weight: bold&#34;&gt;!=&lt;/span&gt; http.MethodPost {
-			tmpl.Execute(w, &lt;span style=&#34;font-weight: bold&#34;&gt;nil&lt;/span&gt;)
-			&lt;span style=&#34;font-weight: bold&#34;&gt;return&lt;/span&gt;
-		}
+    // Parse all files inside `./mytemplates` directory ending with `.html`
+    app.Adapt(view.HTML(&amp;quot;./mytemplates&amp;quot;, &amp;quot;.html&amp;quot;))
 
-		details &lt;span style=&#34;font-weight: bold&#34;&gt;:=&lt;/span&gt; ContactDetails{
-			Email:   r.FormValue(&lt;span style=&#34;color: #bb8844&#34;&gt;&amp;quot;email&amp;quot;&lt;/span&gt;),
-			Subject: r.FormValue(&lt;span style=&#34;color: #bb8844&#34;&gt;&amp;quot;subject&amp;quot;&lt;/span&gt;),
-			Message: r.FormValue(&lt;span style=&#34;color: #bb8844&#34;&gt;&amp;quot;message&amp;quot;&lt;/span&gt;),
-		}
+    app.Get(&amp;quot;/&amp;quot;, func(ctx *iris.Context) {
+        ctx.Render(&amp;quot;forms.html&amp;quot;, nil)
+    }
 
-		&lt;span style=&#34;color: #999988; font-style: italic&#34;&gt;// do something with details&lt;/span&gt;
-		_ = details
+    // Equivalent with app.HandleFunc(&amp;quot;POST&amp;quot;, ...)
+    app.Post(&amp;quot;/&amp;quot;, func(ctx *iris.Context){
 
-		tmpl.Execute(w, &lt;span style=&#34;font-weight: bold&#34;&gt;struct&lt;/span&gt;{ Success &lt;span style=&#34;color: #445588; font-weight: bold&#34;&gt;bool&lt;/span&gt; }{&lt;span style=&#34;font-weight: bold&#34;&gt;true&lt;/span&gt;})
-	})
+        details := ContactDetails{
+            Email:   ctx.FormValue(&amp;quot;email&amp;quot;),
+            Subject: ctx.FormValue(&amp;quot;subject&amp;quot;),
+            Message: ctx.FormValue(&amp;quot;message&amp;quot;),
+        }
 
-	http.ListenAndServe(&lt;span style=&#34;color: #bb8844&#34;&gt;&amp;quot;:8080&amp;quot;&lt;/span&gt;, &lt;span style=&#34;font-weight: bold&#34;&gt;nil&lt;/span&gt;)
+        // do something with details
+        _ = details
+
+        ctx.Render(&amp;quot;forms.html&amp;quot;, struct{ Success bool }{true})
+    })
+
+    app.Listen(&amp;quot;:8080&amp;quot;)
 }
-&lt;/pre&gt;&lt;/div&gt;
+&lt;/code&gt;&lt;/pre&gt;
 
-&lt;div class=&#34;highlight&#34; style=&#34;background: #ffffff&#34;&gt;&lt;pre style=&#34;line-height: 125%&#34;&gt;&lt;span&gt;&lt;/span&gt;&lt;span style=&#34;color: #999988; font-style: italic&#34;&gt;&amp;lt;!-- forms.html --&amp;gt;&lt;/span&gt;
+&lt;pre&gt;&lt;code&gt;&amp;lt;!-- mytemplates/forms.html --&amp;gt;
 {{if .Success}}
-	&amp;lt;&lt;span style=&#34;color: #000080&#34;&gt;h1&lt;/span&gt;&amp;gt;Thanks for your message!&amp;lt;/&lt;span style=&#34;color: #000080&#34;&gt;h1&lt;/span&gt;&amp;gt;
+    &amp;lt;h1&amp;gt;Thanks for your message!&amp;lt;/h1&amp;gt;
 {{else}}
-	&amp;lt;&lt;span style=&#34;color: #000080&#34;&gt;h1&lt;/span&gt;&amp;gt;Contact&amp;lt;/&lt;span style=&#34;color: #000080&#34;&gt;h1&lt;/span&gt;&amp;gt;
-	&amp;lt;&lt;span style=&#34;color: #000080&#34;&gt;form&lt;/span&gt; &lt;span style=&#34;color: #008080&#34;&gt;method&lt;/span&gt;&lt;span style=&#34;font-weight: bold&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color: #bb8844&#34;&gt;&amp;quot;POST&amp;quot;&lt;/span&gt;&amp;gt;
-		&amp;lt;&lt;span style=&#34;color: #000080&#34;&gt;label&lt;/span&gt;&amp;gt;Email:&amp;lt;/&lt;span style=&#34;color: #000080&#34;&gt;label&lt;/span&gt;&amp;gt;&amp;lt;&lt;span style=&#34;color: #000080&#34;&gt;br&lt;/span&gt; /&amp;gt;
-		&amp;lt;&lt;span style=&#34;color: #000080&#34;&gt;input&lt;/span&gt; &lt;span style=&#34;color: #008080&#34;&gt;type&lt;/span&gt;&lt;span style=&#34;font-weight: bold&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color: #bb8844&#34;&gt;&amp;quot;text&amp;quot;&lt;/span&gt; &lt;span style=&#34;color: #008080&#34;&gt;name&lt;/span&gt;&lt;span style=&#34;font-weight: bold&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color: #bb8844&#34;&gt;&amp;quot;email&amp;quot;&lt;/span&gt;&amp;gt;&amp;lt;&lt;span style=&#34;color: #000080&#34;&gt;br&lt;/span&gt; /&amp;gt;
-		&amp;lt;&lt;span style=&#34;color: #000080&#34;&gt;label&lt;/span&gt;&amp;gt;Subject:&amp;lt;/&lt;span style=&#34;color: #000080&#34;&gt;label&lt;/span&gt;&amp;gt;&amp;lt;&lt;span style=&#34;color: #000080&#34;&gt;br&lt;/span&gt; /&amp;gt;
-		&amp;lt;&lt;span style=&#34;color: #000080&#34;&gt;input&lt;/span&gt; &lt;span style=&#34;color: #008080&#34;&gt;type&lt;/span&gt;&lt;span style=&#34;font-weight: bold&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color: #bb8844&#34;&gt;&amp;quot;text&amp;quot;&lt;/span&gt; &lt;span style=&#34;color: #008080&#34;&gt;name&lt;/span&gt;&lt;span style=&#34;font-weight: bold&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color: #bb8844&#34;&gt;&amp;quot;subject&amp;quot;&lt;/span&gt;&amp;gt;&amp;lt;&lt;span style=&#34;color: #000080&#34;&gt;br&lt;/span&gt; /&amp;gt;
-		&amp;lt;&lt;span style=&#34;color: #000080&#34;&gt;label&lt;/span&gt;&amp;gt;Message:&amp;lt;/&lt;span style=&#34;color: #000080&#34;&gt;label&lt;/span&gt;&amp;gt;&amp;lt;&lt;span style=&#34;color: #000080&#34;&gt;br&lt;/span&gt; /&amp;gt;
-		&amp;lt;&lt;span style=&#34;color: #000080&#34;&gt;textarea&lt;/span&gt; &lt;span style=&#34;color: #008080&#34;&gt;name&lt;/span&gt;&lt;span style=&#34;font-weight: bold&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color: #bb8844&#34;&gt;&amp;quot;message&amp;quot;&lt;/span&gt;&amp;gt;&amp;lt;/&lt;span style=&#34;color: #000080&#34;&gt;textarea&lt;/span&gt;&amp;gt;&amp;lt;&lt;span style=&#34;color: #000080&#34;&gt;br&lt;/span&gt; /&amp;gt;
-		&amp;lt;&lt;span style=&#34;color: #000080&#34;&gt;input&lt;/span&gt; &lt;span style=&#34;color: #008080&#34;&gt;type&lt;/span&gt;&lt;span style=&#34;font-weight: bold&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color: #bb8844&#34;&gt;&amp;quot;submit&amp;quot;&lt;/span&gt;&amp;gt;
-	&amp;lt;/&lt;span style=&#34;color: #000080&#34;&gt;form&lt;/span&gt;&amp;gt;
+    &amp;lt;h1&amp;gt;Contact&amp;lt;/h1&amp;gt;
+    &amp;lt;form method=&amp;quot;POST&amp;quot;&amp;gt;
+        &amp;lt;label&amp;gt;Email:&amp;lt;/label&amp;gt;&amp;lt;br /&amp;gt;
+        &amp;lt;input type=&amp;quot;text&amp;quot; name=&amp;quot;email&amp;quot;&amp;gt;&amp;lt;br /&amp;gt;
+        &amp;lt;label&amp;gt;Subject:&amp;lt;/label&amp;gt;&amp;lt;br /&amp;gt;
+        &amp;lt;input type=&amp;quot;text&amp;quot; name=&amp;quot;subject&amp;quot;&amp;gt;&amp;lt;br /&amp;gt;
+        &amp;lt;label&amp;gt;Message:&amp;lt;/label&amp;gt;&amp;lt;br /&amp;gt;
+        &amp;lt;textarea name=&amp;quot;message&amp;quot;&amp;gt;&amp;lt;/textarea&amp;gt;&amp;lt;br /&amp;gt;
+        &amp;lt;input type=&amp;quot;submit&amp;quot;&amp;gt;
+    &amp;lt;/form&amp;gt;
 {{end}}
-&lt;/pre&gt;&lt;/div&gt;
+&lt;/code&gt;&lt;/pre&gt;
 
-&lt;div class=&#34;highlight&#34; style=&#34;background: #ffffff&#34;&gt;&lt;pre style=&#34;line-height: 125%&#34;&gt;&lt;span&gt;&lt;/span&gt;&lt;span style=&#34;color: #555555&#34;&gt;$&lt;/span&gt; go run forms.go
-&lt;/pre&gt;&lt;/div&gt;
+&lt;pre&gt;&lt;code&gt;$ go run forms.go
+&lt;/code&gt;&lt;/pre&gt;
 
 &lt;div class=&#34;demo&#34;&gt;
     &lt;h1&gt;Contact&lt;/h1&gt;
@@ -301,535 +352,561 @@ It is compatible with the router from the standard &lt;code&gt;net/http&lt;/code
         &lt;textarea name=&#34;message&#34;&gt;&lt;/textarea&gt;&lt;br /&gt;
         &lt;input type=&#34;submit&#34;&gt;
     &lt;/form&gt;
-&lt;/div&gt;&lt;/p&gt;
+&lt;/div&gt;
 </description>
     </item>
     
     <item>
       <title>JSON</title>
-      <link>https://gowebexamples.github.io/json/</link>
+      <link>https://docs.iris-go.com/json/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
-      <guid>https://gowebexamples.github.io/json/</guid>
+      <guid>https://docs.iris-go.com/json/</guid>
       <description>
 
-&lt;h1 id=&#34;go-web-examples-json&#34;&gt;&lt;a href=&#34;https://gowebexamples.github.io/&#34;&gt;Go Web Examples:&lt;/a&gt; JSON&lt;/h1&gt;
+&lt;h1 id=&#34;go-web-examples-json&#34;&gt;&lt;a href=&#34;https://docs.iris-go.com/&#34;&gt;Go Web Examples:&lt;/a&gt; JSON&lt;/h1&gt;
 
-&lt;p&gt;This example will show how to encode and decode JSON data using the &lt;code&gt;encoding/json&lt;/code&gt; package.
-&lt;div class=&#34;highlight&#34; style=&#34;background: #ffffff&#34;&gt;&lt;pre style=&#34;line-height: 125%&#34;&gt;&lt;span&gt;&lt;/span&gt;&lt;span style=&#34;color: #999988; font-style: italic&#34;&gt;// json.go&lt;/span&gt;
-&lt;span style=&#34;font-weight: bold&#34;&gt;package&lt;/span&gt; main
+&lt;p&gt;This example will show how to encode and decode JSON data.&lt;/p&gt;
 
-&lt;span style=&#34;font-weight: bold&#34;&gt;import&lt;/span&gt; (
-	&lt;span style=&#34;color: #bb8844&#34;&gt;&amp;quot;encoding/json&amp;quot;&lt;/span&gt;
-	&lt;span style=&#34;color: #bb8844&#34;&gt;&amp;quot;fmt&amp;quot;&lt;/span&gt;
-	&lt;span style=&#34;color: #bb8844&#34;&gt;&amp;quot;net/http&amp;quot;&lt;/span&gt;
+&lt;pre&gt;&lt;code&gt;// json.go
+package main
+
+import (
+    &amp;quot;gopkg.in/kataras/iris.v6&amp;quot;
+    &amp;quot;gopkg.in/kataras/iris.v6/adaptors/httprouter&amp;quot;
 )
 
-&lt;span style=&#34;font-weight: bold&#34;&gt;type&lt;/span&gt; User &lt;span style=&#34;font-weight: bold&#34;&gt;struct&lt;/span&gt; {
-	Firstname &lt;span style=&#34;color: #445588; font-weight: bold&#34;&gt;string&lt;/span&gt; &lt;span style=&#34;color: #bb8844&#34;&gt;`json:&amp;quot;firstname&amp;quot;`&lt;/span&gt;
-	Lastname  &lt;span style=&#34;color: #445588; font-weight: bold&#34;&gt;string&lt;/span&gt; &lt;span style=&#34;color: #bb8844&#34;&gt;`json:&amp;quot;lastname&amp;quot;`&lt;/span&gt;
-	Age       &lt;span style=&#34;color: #445588; font-weight: bold&#34;&gt;int&lt;/span&gt;    &lt;span style=&#34;color: #bb8844&#34;&gt;`json:&amp;quot;age&amp;quot;`&lt;/span&gt;
+type User struct {
+    Firstname string `json:&amp;quot;firstname&amp;quot;`
+    Lastname  string `json:&amp;quot;lastname&amp;quot;`
+    Age       int    `json:&amp;quot;age&amp;quot;`
 }
 
-&lt;span style=&#34;font-weight: bold&#34;&gt;func&lt;/span&gt; main() {
-	http.HandleFunc(&lt;span style=&#34;color: #bb8844&#34;&gt;&amp;quot;/decode&amp;quot;&lt;/span&gt;, &lt;span style=&#34;font-weight: bold&#34;&gt;func&lt;/span&gt;(w http.ResponseWriter, r &lt;span style=&#34;font-weight: bold&#34;&gt;*&lt;/span&gt;http.Request) {
-		&lt;span style=&#34;font-weight: bold&#34;&gt;var&lt;/span&gt; user User
-		json.NewDecoder(r.Body).Decode(&lt;span style=&#34;font-weight: bold&#34;&gt;&amp;amp;&lt;/span&gt;user)
+func main() {
+    app := iris.New()
+    app.Adapt(httprouter.New())
 
-		fmt.Fprintf(w, &lt;span style=&#34;color: #bb8844&#34;&gt;&amp;quot;%s %s is %d years old!&amp;quot;&lt;/span&gt;, user.Firstname, user.Lastname, user.Age)
-	})
+    app.Post(&amp;quot;/decode&amp;quot;, func(ctx *iris.Context) {
+        var user User
+        ctx.ReadJSON(&amp;amp;user)
 
-	http.HandleFunc(&lt;span style=&#34;color: #bb8844&#34;&gt;&amp;quot;/encode&amp;quot;&lt;/span&gt;, &lt;span style=&#34;font-weight: bold&#34;&gt;func&lt;/span&gt;(w http.ResponseWriter, r &lt;span style=&#34;font-weight: bold&#34;&gt;*&lt;/span&gt;http.Request) {
-		peter &lt;span style=&#34;font-weight: bold&#34;&gt;:=&lt;/span&gt; User{
-			Firstname: &lt;span style=&#34;color: #bb8844&#34;&gt;&amp;quot;John&amp;quot;&lt;/span&gt;,
-			Lastname:  &lt;span style=&#34;color: #bb8844&#34;&gt;&amp;quot;Doe&amp;quot;&lt;/span&gt;,
-			Age:       &lt;span style=&#34;color: #009999&#34;&gt;25&lt;/span&gt;,
-		}
+        ctx.Writef(&amp;quot;%s %s is %d years old!&amp;quot;, user.Firstname, user.Lastname, user.Age)
+    })
 
-		json.NewEncoder(w).Encode(peter)
-	})
+    app.Get(&amp;quot;/encode&amp;quot;, func(ctx *iris.Context) {
+        peter := User{
+            Firstname: &amp;quot;John&amp;quot;,
+            Lastname:  &amp;quot;Doe&amp;quot;,
+            Age:       25,
+        }
 
-	http.ListenAndServe(&lt;span style=&#34;color: #bb8844&#34;&gt;&amp;quot;:8080&amp;quot;&lt;/span&gt;, &lt;span style=&#34;font-weight: bold&#34;&gt;nil&lt;/span&gt;)
+        ctx.JSON(iris.StatusOK, peter)
+    })
+
+    app.Listen(&amp;quot;:8080&amp;quot;)
 }
-&lt;/pre&gt;&lt;/div&gt;
+&lt;/code&gt;&lt;/pre&gt;
 
-&lt;div class=&#34;highlight&#34; style=&#34;background: #ffffff&#34;&gt;&lt;pre style=&#34;line-height: 125%&#34;&gt;&lt;span&gt;&lt;/span&gt;&lt;span style=&#34;color: #555555&#34;&gt;$&lt;/span&gt; go run json.go
+&lt;pre&gt;&lt;code&gt;$ go run json.go
 
-&lt;span style=&#34;color: #555555&#34;&gt;$&lt;/span&gt; curl -s -XPOST -d&lt;span style=&#34;color: #bb8844&#34;&gt;&amp;#39;{&amp;quot;firstname&amp;quot;:&amp;quot;Donald&amp;quot;,&amp;quot;lastname&amp;quot;:&amp;quot;Trump&amp;quot;,&amp;quot;age&amp;quot;:70}&amp;#39;&lt;/span&gt; http://localhost:8080/decode
-&lt;span style=&#34;color: #888888&#34;&gt;Donald Trump is 70 years old!&lt;/span&gt;
+$ curl -s -XPOST -d&#39;{&amp;quot;firstname&amp;quot;:&amp;quot;Donald&amp;quot;,&amp;quot;lastname&amp;quot;:&amp;quot;Trump&amp;quot;,&amp;quot;age&amp;quot;:70}&#39; http://localhost:8080/decode
+Donald Trump is 70 years old!
 
-&lt;span style=&#34;color: #555555&#34;&gt;$&lt;/span&gt; curl -s http://localhost:8080/encode
-&lt;span style=&#34;color: #888888&#34;&gt;{&amp;quot;firstname&amp;quot;:&amp;quot;John&amp;quot;,&amp;quot;lastname&amp;quot;:&amp;quot;Doe&amp;quot;,&amp;quot;age&amp;quot;:25}&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-&lt;/p&gt;
+$ curl -s http://localhost:8080/encode
+{&amp;quot;firstname&amp;quot;:&amp;quot;John&amp;quot;,&amp;quot;lastname&amp;quot;:&amp;quot;Doe&amp;quot;,&amp;quot;age&amp;quot;:25}
+
+&lt;/code&gt;&lt;/pre&gt;
 </description>
     </item>
     
     <item>
       <title>Static Files</title>
-      <link>https://gowebexamples.github.io/static-files/</link>
+      <link>https://docs.iris-go.com/static-files/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
-      <guid>https://gowebexamples.github.io/static-files/</guid>
+      <guid>https://docs.iris-go.com/static-files/</guid>
       <description>
 
-&lt;h1 id=&#34;go-web-examples-static-files&#34;&gt;&lt;a href=&#34;https://gowebexamples.github.io/&#34;&gt;Go Web Examples:&lt;/a&gt; Static Files&lt;/h1&gt;
+&lt;h1 id=&#34;go-web-examples-static-files&#34;&gt;&lt;a href=&#34;https://docs.iris-go.com/&#34;&gt;Go Web Examples:&lt;/a&gt; Static Files&lt;/h1&gt;
 
 &lt;p&gt;This example will show how to serve static files like CSSs, JavaScripts or images from a specific directory.&lt;/p&gt;
 
-&lt;p&gt;&lt;div class=&#34;highlight&#34; style=&#34;background: #ffffff&#34;&gt;&lt;pre style=&#34;line-height: 125%&#34;&gt;&lt;span&gt;&lt;/span&gt;&lt;span style=&#34;color: #999988; font-style: italic&#34;&gt;// static-files.go&lt;/span&gt;
-&lt;span style=&#34;font-weight: bold&#34;&gt;package&lt;/span&gt; main
+&lt;pre&gt;&lt;code&gt;// static-files.go
+package main
 
-&lt;span style=&#34;font-weight: bold&#34;&gt;import&lt;/span&gt; &lt;span style=&#34;color: #bb8844&#34;&gt;&amp;quot;net/http&amp;quot;&lt;/span&gt;
+import (
+    &amp;quot;gopkg.in/kataras/iris.v6&amp;quot;
+    &amp;quot;gopkg.in/kataras/iris.v6/adaptors/httprouter&amp;quot;
+)
 
-&lt;span style=&#34;font-weight: bold&#34;&gt;func&lt;/span&gt; main() {
-	fs &lt;span style=&#34;font-weight: bold&#34;&gt;:=&lt;/span&gt; http.FileServer(http.Dir(&lt;span style=&#34;color: #bb8844&#34;&gt;&amp;quot;assets/&amp;quot;&lt;/span&gt;))
-	http.Handle(&lt;span style=&#34;color: #bb8844&#34;&gt;&amp;quot;/static/&amp;quot;&lt;/span&gt;, http.StripPrefix(&lt;span style=&#34;color: #bb8844&#34;&gt;&amp;quot;/static/&amp;quot;&lt;/span&gt;, fs))
+func main() {
+    app := iris.New()
+    app.Adapt(httprouter.New())
+    // first parameter is the request path
+    // second is the operating system directory
+    app.StaticWeb(&amp;quot;/static&amp;quot;, &amp;quot;./static&amp;quot;)
 
-	http.ListenAndServe(&lt;span style=&#34;color: #bb8844&#34;&gt;&amp;quot;:8080&amp;quot;&lt;/span&gt;, &lt;span style=&#34;font-weight: bold&#34;&gt;nil&lt;/span&gt;)
+    app.Listen(&amp;quot;:8080&amp;quot;)
 }
-&lt;/pre&gt;&lt;/div&gt;
+&lt;/code&gt;&lt;/pre&gt;
 
-&lt;div class=&#34;highlight&#34; style=&#34;background: #ffffff&#34;&gt;&lt;pre style=&#34;line-height: 125%&#34;&gt;&lt;span&gt;&lt;/span&gt;&lt;span style=&#34;color: #555555&#34;&gt;$&lt;/span&gt; tree assets/
-&lt;span style=&#34;color: #888888&#34;&gt;assets/&lt;/span&gt;
-&lt;span style=&#34;color: #888888&#34;&gt;└── css&lt;/span&gt;
-&lt;span style=&#34;color: #888888&#34;&gt;    └── styles.css&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
+&lt;pre&gt;&lt;code&gt;$ tree assets/
+assets/
+└── css
+    └── styles.css
+&lt;/code&gt;&lt;/pre&gt;
 
-&lt;div class=&#34;highlight&#34; style=&#34;background: #ffffff&#34;&gt;&lt;pre style=&#34;line-height: 125%&#34;&gt;&lt;span&gt;&lt;/span&gt;&lt;span style=&#34;color: #555555&#34;&gt;$&lt;/span&gt; go run static-files.go
+&lt;pre&gt;&lt;code&gt;$ go run static-files.go
 
-&lt;span style=&#34;color: #555555&#34;&gt;$&lt;/span&gt; curl -s http://localhost:8080/static/css/styles.css
-&lt;span style=&#34;color: #888888&#34;&gt;body {&lt;/span&gt;
-&lt;span style=&#34;color: #888888&#34;&gt;    background-color: black;&lt;/span&gt;
-&lt;span style=&#34;color: #888888&#34;&gt;}&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-&lt;/p&gt;
+$ curl -s http://localhost:8080/static/css/styles.css
+body {
+    background-color: black;
+}
+&lt;/code&gt;&lt;/pre&gt;
 </description>
     </item>
     
     <item>
       <title>Sessions</title>
-      <link>https://gowebexamples.github.io/sessions/</link>
+      <link>https://docs.iris-go.com/sessions/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
-      <guid>https://gowebexamples.github.io/sessions/</guid>
+      <guid>https://docs.iris-go.com/sessions/</guid>
       <description>
 
-&lt;h1 id=&#34;go-web-examples-sessions&#34;&gt;&lt;a href=&#34;https://gowebexamples.github.io/&#34;&gt;Go Web Examples:&lt;/a&gt; Sessions&lt;/h1&gt;
+&lt;h1 id=&#34;go-web-examples-sessions&#34;&gt;&lt;a href=&#34;https://docs.iris-go.com/&#34;&gt;Go Web Examples:&lt;/a&gt; Sessions&lt;/h1&gt;
 
-&lt;p&gt;This example will show how to store data in session cookies using the popular  &lt;a target=&#34;_blank&#34; href=&#34;https://github.com/gorilla/sessions&#34;&gt;gorilla/sessions&lt;/a&gt; package in Go.&lt;/p&gt;
+&lt;p&gt;This example will show how to store data from a session.&lt;/p&gt;
 
-&lt;p&gt;Cookies are small pieces of data stored in the browser of a user and are sent to our server on each request. In them, we can store e.g. whether or not a user is logged in into our website and figure out who he actually is (in our system).&lt;/p&gt;
+&lt;p&gt;You don&amp;rsquo;t need any third-party library except Iris, but if you want you can use anything, remember Iris is fully compatible with the standard library. You can find a more detailed example by pressing &lt;a href=&#34;https://github.com/kataras/iris/blob/v6/adaptors/sessions/_example/main.go&#34;&gt;here&lt;/a&gt;.&lt;/p&gt;
 
-&lt;p&gt;In this example we will only allow authenticated users to view our secret message on the &lt;code&gt;/secret&lt;/code&gt; page. To get access to it, the will first have to visit &lt;code&gt;/login&lt;/code&gt; to get a valid session cookie, which logs him in. Additionally he can visit &lt;code&gt;/logout&lt;/code&gt; to revoke his access to our secret message.
-&lt;div class=&#34;highlight&#34; style=&#34;background: #ffffff&#34;&gt;&lt;pre style=&#34;line-height: 125%&#34;&gt;&lt;span&gt;&lt;/span&gt;&lt;span style=&#34;color: #999988; font-style: italic&#34;&gt;// sessions.go&lt;/span&gt;
-&lt;span style=&#34;font-weight: bold&#34;&gt;package&lt;/span&gt; main
+&lt;p&gt;In this example we will only allow authenticated users to view our secret message on the &lt;code&gt;/secret&lt;/code&gt; page. To get access to it, the will first have to visit &lt;code&gt;/login&lt;/code&gt; to get a valid session cookie, which logs him in. Additionally he can visit &lt;code&gt;/logout&lt;/code&gt; to revoke his access to our secret message.&lt;/p&gt;
 
-&lt;span style=&#34;font-weight: bold&#34;&gt;import&lt;/span&gt; (
-	&lt;span style=&#34;color: #bb8844&#34;&gt;&amp;quot;fmt&amp;quot;&lt;/span&gt;
-	&lt;span style=&#34;color: #bb8844&#34;&gt;&amp;quot;net/http&amp;quot;&lt;/span&gt;
+&lt;pre&gt;&lt;code&gt;// sessions.go
+package main
 
-	&lt;span style=&#34;color: #bb8844&#34;&gt;&amp;quot;github.com/gorilla/sessions&amp;quot;&lt;/span&gt;
+import (
+    &amp;quot;gopkg.in/kataras/iris.v6&amp;quot;
+    &amp;quot;gopkg.in/kataras/iris.v6/adaptors/httprouter&amp;quot;
+    &amp;quot;gopkg.in/kataras/iris.v6/adaptors/sessions&amp;quot;
 )
 
-&lt;span style=&#34;font-weight: bold&#34;&gt;var&lt;/span&gt; (
-	&lt;span style=&#34;color: #999988; font-style: italic&#34;&gt;// key must be 16, 24 or 32 bytes long (AES-128, AES-192 or AES-256)&lt;/span&gt;
-	key = []&lt;span style=&#34;color: #999999&#34;&gt;byte&lt;/span&gt;(&lt;span style=&#34;color: #bb8844&#34;&gt;&amp;quot;super-secret-key&amp;quot;&lt;/span&gt;)
-	store = sessions.NewCookieStore(key)
+var (
+    key = &amp;quot;my_sessionid&amp;quot;
 )
 
-&lt;span style=&#34;font-weight: bold&#34;&gt;func&lt;/span&gt; secret(w http.ResponseWriter, r &lt;span style=&#34;font-weight: bold&#34;&gt;*&lt;/span&gt;http.Request) {
-	session, _ &lt;span style=&#34;font-weight: bold&#34;&gt;:=&lt;/span&gt; store.Get(r, &lt;span style=&#34;color: #bb8844&#34;&gt;&amp;quot;cookie-name&amp;quot;&lt;/span&gt;)
+func secret(ctx *iris.Context) {
 
-	&lt;span style=&#34;color: #999988; font-style: italic&#34;&gt;// Check if user is authenticated&lt;/span&gt;
-	&lt;span style=&#34;font-weight: bold&#34;&gt;if&lt;/span&gt; auth, ok &lt;span style=&#34;font-weight: bold&#34;&gt;:=&lt;/span&gt; session.Values[&lt;span style=&#34;color: #bb8844&#34;&gt;&amp;quot;authenticated&amp;quot;&lt;/span&gt;].(&lt;span style=&#34;color: #445588; font-weight: bold&#34;&gt;bool&lt;/span&gt;); !ok &lt;span style=&#34;font-weight: bold&#34;&gt;||&lt;/span&gt; !auth {
-		http.Error(w, &lt;span style=&#34;color: #bb8844&#34;&gt;&amp;quot;Forbidden&amp;quot;&lt;/span&gt;, http.StatusForbidden)
-		&lt;span style=&#34;font-weight: bold&#34;&gt;return&lt;/span&gt;
-	}
+    // Check if user is authenticated
+    if auth, _ := ctx.Session().GetBoolean(authenticated); !auth {
+        ctx.EmitError(iris.StatusForbidden)
+        return
+    }
 
-	&lt;span style=&#34;color: #999988; font-style: italic&#34;&gt;// Print secret message&lt;/span&gt;
-	fmt.Fprintln(w, &lt;span style=&#34;color: #bb8844&#34;&gt;&amp;quot;The cake is a lie!&amp;quot;&lt;/span&gt;)
+    // Print secret message
+    ctx.WriteString(&amp;quot;The cake is a lie!&amp;quot;)
 }
 
-&lt;span style=&#34;font-weight: bold&#34;&gt;func&lt;/span&gt; login(w http.ResponseWriter, r &lt;span style=&#34;font-weight: bold&#34;&gt;*&lt;/span&gt;http.Request) {
-	session, _ &lt;span style=&#34;font-weight: bold&#34;&gt;:=&lt;/span&gt; store.Get(r, &lt;span style=&#34;color: #bb8844&#34;&gt;&amp;quot;cookie-name&amp;quot;&lt;/span&gt;)
+func login(ctx *iris.Context) {
+    session := ctx.Session()
 
-	&lt;span style=&#34;color: #999988; font-style: italic&#34;&gt;// Authentication goes here&lt;/span&gt;
-	&lt;span style=&#34;color: #999988; font-style: italic&#34;&gt;// ...&lt;/span&gt;
+    // Authentication goes here
+    // ...
 
-	&lt;span style=&#34;color: #999988; font-style: italic&#34;&gt;// Set user as authenticated&lt;/span&gt;
-	session.Values[&lt;span style=&#34;color: #bb8844&#34;&gt;&amp;quot;authenticated&amp;quot;&lt;/span&gt;] = &lt;span style=&#34;font-weight: bold&#34;&gt;true&lt;/span&gt;
-	session.Save(r, w)
+    // Set user as authenticated
+    session.Set(&amp;quot;authenticated&amp;quot;, true)
 }
 
-&lt;span style=&#34;font-weight: bold&#34;&gt;func&lt;/span&gt; logout(w http.ResponseWriter, r &lt;span style=&#34;font-weight: bold&#34;&gt;*&lt;/span&gt;http.Request) {
-	session, _ &lt;span style=&#34;font-weight: bold&#34;&gt;:=&lt;/span&gt; store.Get(r, &lt;span style=&#34;color: #bb8844&#34;&gt;&amp;quot;cookie-name&amp;quot;&lt;/span&gt;)
+func logout(ctx *iris.Context) {
+    session := ctx.Session()
 
-	&lt;span style=&#34;color: #999988; font-style: italic&#34;&gt;// Revoke users authentication&lt;/span&gt;
-	session.Values[&lt;span style=&#34;color: #bb8844&#34;&gt;&amp;quot;authenticated&amp;quot;&lt;/span&gt;] = &lt;span style=&#34;font-weight: bold&#34;&gt;false&lt;/span&gt;
-	session.Save(r, w)
+    // Revoke users authentication
+    session.Set(&amp;quot;authenticated&amp;quot;, false)
 }
 
-&lt;span style=&#34;font-weight: bold&#34;&gt;func&lt;/span&gt; main() {
-	http.HandleFunc(&lt;span style=&#34;color: #bb8844&#34;&gt;&amp;quot;/secret&amp;quot;&lt;/span&gt;, secret)
-	http.HandleFunc(&lt;span style=&#34;color: #bb8844&#34;&gt;&amp;quot;/login&amp;quot;&lt;/span&gt;, login)
-	http.HandleFunc(&lt;span style=&#34;color: #bb8844&#34;&gt;&amp;quot;/logout&amp;quot;&lt;/span&gt;, logout)
+func main() {
+    app := iris.New()
+    app.Adapt(httprouter.New())
 
-	http.ListenAndServe(&lt;span style=&#34;color: #bb8844&#34;&gt;&amp;quot;:8080&amp;quot;&lt;/span&gt;, &lt;span style=&#34;font-weight: bold&#34;&gt;nil&lt;/span&gt;)
+    sess := sessions.New(sessions.Config{Cookie: key})
+    app.Adapt(sess)
+
+    app.Get(&amp;quot;/secret&amp;quot;, secret)
+    app.Get(&amp;quot;/login&amp;quot;, login)
+    app.Get(&amp;quot;/logout&amp;quot;, logout)
+
+    app.Listen(&amp;quot;:8080&amp;quot;)
 }
-&lt;/pre&gt;&lt;/div&gt;
+&lt;/code&gt;&lt;/pre&gt;
 
-&lt;div class=&#34;highlight&#34; style=&#34;background: #ffffff&#34;&gt;&lt;pre style=&#34;line-height: 125%&#34;&gt;&lt;span&gt;&lt;/span&gt;&lt;span style=&#34;color: #555555&#34;&gt;$&lt;/span&gt; go run sessions.go
+&lt;pre&gt;&lt;code&gt;$ go run sessions.go
 
-&lt;span style=&#34;color: #555555&#34;&gt;$&lt;/span&gt; curl -s http://localhost:8080/secret
-&lt;span style=&#34;color: #888888&#34;&gt;Forbidden&lt;/span&gt;
+$ curl -s http://localhost:8080/secret
+Forbidden
 
-&lt;span style=&#34;color: #555555&#34;&gt;$&lt;/span&gt; curl -s -I http://localhost:8080/login
-&lt;span style=&#34;color: #888888&#34;&gt;Set-Cookie: cookie-name=MTQ4NzE5Mz...&lt;/span&gt;
+$ curl -s -I http://localhost:8080/login
+Set-Cookie: mysessionid=MTQ4NzE5Mz...
 
-&lt;span style=&#34;color: #555555&#34;&gt;$&lt;/span&gt; curl -s --cookie &lt;span style=&#34;color: #bb8844&#34;&gt;&amp;quot;cookie-name=MTQ4NzE5Mz...&amp;quot;&lt;/span&gt; http://localhost:8080/secret
-&lt;span style=&#34;color: #888888&#34;&gt;The cake is a lie!&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-&lt;/p&gt;
+$ curl -s --cookie &amp;quot;mysessionid=MTQ4NzE5Mz...&amp;quot; http://localhost:8080/secret
+The cake is a lie!
+&lt;/code&gt;&lt;/pre&gt;
 </description>
     </item>
     
     <item>
       <title>Password Hashing</title>
-      <link>https://gowebexamples.github.io/password-hashing/</link>
+      <link>https://docs.iris-go.com/password-hashing/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
-      <guid>https://gowebexamples.github.io/password-hashing/</guid>
+      <guid>https://docs.iris-go.com/password-hashing/</guid>
       <description>
 
-&lt;h1 id=&#34;go-web-examples-password-hashing&#34;&gt;&lt;a href=&#34;https://gowebexamples.github.io/&#34;&gt;Go Web Examples:&lt;/a&gt; Password Hashing&lt;/h1&gt;
+&lt;h1 id=&#34;go-web-examples-password-hashing&#34;&gt;&lt;a href=&#34;https://docs.iris-go.com/&#34;&gt;Go Web Examples:&lt;/a&gt; Password Hashing&lt;/h1&gt;
 
 &lt;p&gt;This example will show how to hash passwords using bcrypt.
 For this we have to &lt;code&gt;go get&lt;/code&gt; the golang bcrypt library like so:&lt;/p&gt;
 
 &lt;p&gt;&lt;code&gt;$ go get golang.org/x/crypto/bcrypt&lt;/code&gt;&lt;/p&gt;
 
-&lt;p&gt;From now on, every application we write will be able to make use of this library.
-&lt;div class=&#34;highlight&#34; style=&#34;background: #ffffff&#34;&gt;&lt;pre style=&#34;line-height: 125%&#34;&gt;&lt;span&gt;&lt;/span&gt;&lt;span style=&#34;color: #999988; font-style: italic&#34;&gt;// passwords.go&lt;/span&gt;
-&lt;span style=&#34;font-weight: bold&#34;&gt;package&lt;/span&gt; main
+&lt;p&gt;From now on, every application we write will be able to make use of this library.&lt;/p&gt;
 
-&lt;span style=&#34;font-weight: bold&#34;&gt;import&lt;/span&gt; (
-	&lt;span style=&#34;color: #bb8844&#34;&gt;&amp;quot;fmt&amp;quot;&lt;/span&gt;
+&lt;pre&gt;&lt;code&gt;// passwords.go
+package main
 
-	&lt;span style=&#34;color: #bb8844&#34;&gt;&amp;quot;golang.org/x/crypto/bcrypt&amp;quot;&lt;/span&gt;
+import (
+    &amp;quot;fmt&amp;quot;
+
+    &amp;quot;golang.org/x/crypto/bcrypt&amp;quot;
 )
 
-&lt;span style=&#34;font-weight: bold&#34;&gt;func&lt;/span&gt; HashPassword(password &lt;span style=&#34;color: #445588; font-weight: bold&#34;&gt;string&lt;/span&gt;) (&lt;span style=&#34;color: #445588; font-weight: bold&#34;&gt;string&lt;/span&gt;, &lt;span style=&#34;color: #445588; font-weight: bold&#34;&gt;error&lt;/span&gt;) {
-	bytes, err &lt;span style=&#34;font-weight: bold&#34;&gt;:=&lt;/span&gt; bcrypt.GenerateFromPassword([]&lt;span style=&#34;color: #999999&#34;&gt;byte&lt;/span&gt;(password), &lt;span style=&#34;color: #009999&#34;&gt;14&lt;/span&gt;)
-	&lt;span style=&#34;font-weight: bold&#34;&gt;return&lt;/span&gt; &lt;span style=&#34;color: #999999&#34;&gt;string&lt;/span&gt;(bytes), err
+func HashPassword(password string) (string, error) {
+    bytes, err := bcrypt.GenerateFromPassword([]byte(password), 14)
+    return string(bytes), err
 }
 
-&lt;span style=&#34;font-weight: bold&#34;&gt;func&lt;/span&gt; CheckPasswordHash(password, hash &lt;span style=&#34;color: #445588; font-weight: bold&#34;&gt;string&lt;/span&gt;) &lt;span style=&#34;color: #445588; font-weight: bold&#34;&gt;bool&lt;/span&gt; {
-	err &lt;span style=&#34;font-weight: bold&#34;&gt;:=&lt;/span&gt; bcrypt.CompareHashAndPassword([]&lt;span style=&#34;color: #999999&#34;&gt;byte&lt;/span&gt;(hash), []&lt;span style=&#34;color: #999999&#34;&gt;byte&lt;/span&gt;(password))
-	&lt;span style=&#34;font-weight: bold&#34;&gt;return&lt;/span&gt; err &lt;span style=&#34;font-weight: bold&#34;&gt;==&lt;/span&gt; &lt;span style=&#34;font-weight: bold&#34;&gt;nil&lt;/span&gt;
+func CheckPasswordHash(password, hash string) bool {
+    err := bcrypt.CompareHashAndPassword([]byte(hash), []byte(password))
+    return err == nil
 }
 
-&lt;span style=&#34;font-weight: bold&#34;&gt;func&lt;/span&gt; main() {
-	password &lt;span style=&#34;font-weight: bold&#34;&gt;:=&lt;/span&gt; &lt;span style=&#34;color: #bb8844&#34;&gt;&amp;quot;secret&amp;quot;&lt;/span&gt;
-	hash, _ &lt;span style=&#34;font-weight: bold&#34;&gt;:=&lt;/span&gt; HashPassword(password) &lt;span style=&#34;color: #999988; font-style: italic&#34;&gt;// ignore error for the sake of simplicity&lt;/span&gt;
+func main() {
+    password := &amp;quot;secret&amp;quot;
+    hash, _ := HashPassword(password) // ignore error for the sake of simplicity
 
-	fmt.Println(&lt;span style=&#34;color: #bb8844&#34;&gt;&amp;quot;Password:&amp;quot;&lt;/span&gt;, password)
-	fmt.Println(&lt;span style=&#34;color: #bb8844&#34;&gt;&amp;quot;Hash:    &amp;quot;&lt;/span&gt;, hash)
+    fmt.Println(&amp;quot;Password:&amp;quot;, password)
+    fmt.Println(&amp;quot;Hash:    &amp;quot;, hash)
 
-	match &lt;span style=&#34;font-weight: bold&#34;&gt;:=&lt;/span&gt; CheckPasswordHash(password, hash)
-	fmt.Println(&lt;span style=&#34;color: #bb8844&#34;&gt;&amp;quot;Match:   &amp;quot;&lt;/span&gt;, match)
+    match := CheckPasswordHash(password, hash)
+    fmt.Println(&amp;quot;Match:   &amp;quot;, match)
 }
-&lt;/pre&gt;&lt;/div&gt;
 
-&lt;div class=&#34;highlight&#34; style=&#34;background: #ffffff&#34;&gt;&lt;pre style=&#34;line-height: 125%&#34;&gt;&lt;span&gt;&lt;/span&gt;&lt;span style=&#34;color: #555555&#34;&gt;$&lt;/span&gt; go run passwords.go
-&lt;span style=&#34;color: #888888&#34;&gt;Password: secret&lt;/span&gt;
-&lt;span style=&#34;color: #888888&#34;&gt;Hash:     $2a$14$ajq8Q7fbtFRQvXpdCq7Jcuy.Rx1h/L4J60Otx.gyNLbAYctGMJ9tK&lt;/span&gt;
-&lt;span style=&#34;color: #888888&#34;&gt;Match:    true&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-&lt;/p&gt;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;pre&gt;&lt;code&gt;$ go run passwords.go
+Password: secret
+Hash:     $2a$14$ajq8Q7fbtFRQvXpdCq7Jcuy.Rx1h/L4J60Otx.gyNLbAYctGMJ9tK
+Match:    true
+&lt;/code&gt;&lt;/pre&gt;
 </description>
     </item>
     
     <item>
       <title>Websockets</title>
-      <link>https://gowebexamples.github.io/websockets/</link>
+      <link>https://docs.iris-go.com/websockets/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
-      <guid>https://gowebexamples.github.io/websockets/</guid>
+      <guid>https://docs.iris-go.com/websockets/</guid>
       <description>
 
-&lt;h1 id=&#34;go-web-examples-websockets&#34;&gt;&lt;a href=&#34;https://gowebexamples.github.io/&#34;&gt;Go Web Examples:&lt;/a&gt; Websockets&lt;/h1&gt;
+&lt;h1 id=&#34;go-web-examples-websockets&#34;&gt;&lt;a href=&#34;https://docs.iris-go.com/&#34;&gt;Go Web Examples:&lt;/a&gt; Websockets&lt;/h1&gt;
 
 &lt;p&gt;This example will show how to work with websockets in Go. We will build a simple server which echoes back everything we send to it.
-For this we have to &lt;code&gt;go get&lt;/code&gt; the popular &lt;a target=&#34;_blank&#34; href=&#34;https://github.com/gorilla/websocket&#34;&gt;gorilla/websocket&lt;/a&gt; library like so:&lt;/p&gt;
+You don&amp;rsquo;t need any third-party library except &lt;code&gt;adaptors/websocket&lt;/code&gt;, but if you want you can use anything. Remember: Iris is fully compatible with the standard library.&lt;/p&gt;
 
-&lt;p&gt;&lt;code&gt;$ go get github.com/gorilla/websocket&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;You can find more websocket examples by pressing &lt;a href=&#34;https://github.com/kataras/iris/tree/v6/adaptors/websocket/_examples&#34;&gt;here&lt;/a&gt;.&lt;/p&gt;
 
-&lt;p&gt;From now on, every application we write will be able to make use of this library.
-&lt;div class=&#34;highlight&#34; style=&#34;background: #ffffff&#34;&gt;&lt;pre style=&#34;line-height: 125%&#34;&gt;&lt;span&gt;&lt;/span&gt;&lt;span style=&#34;color: #999988; font-style: italic&#34;&gt;// websockets.go&lt;/span&gt;
-&lt;span style=&#34;font-weight: bold&#34;&gt;package&lt;/span&gt; main
+&lt;pre&gt;&lt;code&gt;// websockets.go
+package main
 
-&lt;span style=&#34;font-weight: bold&#34;&gt;import&lt;/span&gt; (
-	&lt;span style=&#34;color: #bb8844&#34;&gt;&amp;quot;fmt&amp;quot;&lt;/span&gt;
-	&lt;span style=&#34;color: #bb8844&#34;&gt;&amp;quot;net/http&amp;quot;&lt;/span&gt;
+import (
+    &amp;quot;fmt&amp;quot;
 
-	&lt;span style=&#34;color: #bb8844&#34;&gt;&amp;quot;github.com/gorilla/websocket&amp;quot;&lt;/span&gt;
+    &amp;quot;gopkg.in/kataras/iris.v6&amp;quot;
+    &amp;quot;gopkg.in/kataras/iris.v6/adaptors/httprouter&amp;quot;
+    &amp;quot;gopkg.in/kataras/iris.v6/adaptors/websocket&amp;quot;
 )
 
-&lt;span style=&#34;font-weight: bold&#34;&gt;var&lt;/span&gt; upgrader = websocket.Upgrader{
-	ReadBufferSize:  &lt;span style=&#34;color: #009999&#34;&gt;1024&lt;/span&gt;,
-	WriteBufferSize: &lt;span style=&#34;color: #009999&#34;&gt;1024&lt;/span&gt;,
+const (
+    ReadBufferSize =  1024
+    WriteBufferSize = 1024
+)
+
+func handleConnection(c websocket.Connection){
+
+    // Read events from browser
+    c.On(&amp;quot;chat&amp;quot;, func(msg string) {
+
+        // Print the message to the console
+        fmt.Printf(&amp;quot;%s sent: %s\n&amp;quot;, c.Context().RemoteAddr(), msg)
+
+        // Write message back to browser
+        c.Emit(&amp;quot;chat&amp;quot;, msg)
+    })
+
 }
 
-&lt;span style=&#34;font-weight: bold&#34;&gt;func&lt;/span&gt; main() {
-	http.HandleFunc(&lt;span style=&#34;color: #bb8844&#34;&gt;&amp;quot;/echo&amp;quot;&lt;/span&gt;, &lt;span style=&#34;font-weight: bold&#34;&gt;func&lt;/span&gt;(w http.ResponseWriter, r &lt;span style=&#34;font-weight: bold&#34;&gt;*&lt;/span&gt;http.Request) {
-		conn, _ &lt;span style=&#34;font-weight: bold&#34;&gt;:=&lt;/span&gt; upgrader.Upgrade(w, r, &lt;span style=&#34;font-weight: bold&#34;&gt;nil&lt;/span&gt;) &lt;span style=&#34;color: #999988; font-style: italic&#34;&gt;// error ignored for sake of simplicity&lt;/span&gt;
+func main() {
+    app := iris.New()
+    app.Adapt(httprouter.New())
 
-		&lt;span style=&#34;font-weight: bold&#34;&gt;for&lt;/span&gt; {
-			&lt;span style=&#34;color: #999988; font-style: italic&#34;&gt;// Read message from browser&lt;/span&gt;
-			msgType, msg, err &lt;span style=&#34;font-weight: bold&#34;&gt;:=&lt;/span&gt; conn.ReadMessage()
-			&lt;span style=&#34;font-weight: bold&#34;&gt;if&lt;/span&gt; err &lt;span style=&#34;font-weight: bold&#34;&gt;!=&lt;/span&gt; &lt;span style=&#34;font-weight: bold&#34;&gt;nil&lt;/span&gt; {
-				&lt;span style=&#34;font-weight: bold&#34;&gt;return&lt;/span&gt;
-			}
+    // create our echo websocket server
+    ws := websocket.New(websocket.Config{
+      ReadBufferSize: 1024,
+        WriteBufferSize: 1024,
+        Endpoint: &amp;quot;/echo&amp;quot;,
+    })
 
-			&lt;span style=&#34;color: #999988; font-style: italic&#34;&gt;// Print the message to the console&lt;/span&gt;
-			fmt.Printf(&lt;span style=&#34;color: #bb8844&#34;&gt;&amp;quot;%s sent: %s\n&amp;quot;&lt;/span&gt;, conn.RemoteAddr(), &lt;span style=&#34;color: #999999&#34;&gt;string&lt;/span&gt;(msg))
+    ws.OnConnection(handleConnection)
 
-			&lt;span style=&#34;color: #999988; font-style: italic&#34;&gt;// Write message back to browser&lt;/span&gt;
-			&lt;span style=&#34;font-weight: bold&#34;&gt;if&lt;/span&gt; err = conn.WriteMessage(msgType, msg); err &lt;span style=&#34;font-weight: bold&#34;&gt;!=&lt;/span&gt; &lt;span style=&#34;font-weight: bold&#34;&gt;nil&lt;/span&gt; {
-				&lt;span style=&#34;font-weight: bold&#34;&gt;return&lt;/span&gt;
-			}
-		}
-	})
+    // Adapt the websocket server.
+    // you can adapt more than one of course.
+    app.Adapt(ws)
 
-	http.HandleFunc(&lt;span style=&#34;color: #bb8844&#34;&gt;&amp;quot;/&amp;quot;&lt;/span&gt;, &lt;span style=&#34;font-weight: bold&#34;&gt;func&lt;/span&gt;(w http.ResponseWriter, r &lt;span style=&#34;font-weight: bold&#34;&gt;*&lt;/span&gt;http.Request) {
-		http.ServeFile(w, r, &lt;span style=&#34;color: #bb8844&#34;&gt;&amp;quot;websockets.html&amp;quot;&lt;/span&gt;)
-	})
+    app.Get(&amp;quot;/&amp;quot;, func(ctx *iris.Context) {
+        ctx.ServeFile(&amp;quot;websockets.html&amp;quot;)
+    })
 
-	http.ListenAndServe(&lt;span style=&#34;color: #bb8844&#34;&gt;&amp;quot;:8080&amp;quot;&lt;/span&gt;, &lt;span style=&#34;font-weight: bold&#34;&gt;nil&lt;/span&gt;)
+    app.Listen(&amp;quot;:8080&amp;quot;)
 }
-&lt;/pre&gt;&lt;/div&gt;
+&lt;/code&gt;&lt;/pre&gt;
 
-&lt;div class=&#34;highlight&#34; style=&#34;background: #ffffff&#34;&gt;&lt;pre style=&#34;line-height: 125%&#34;&gt;&lt;span&gt;&lt;/span&gt;&lt;span style=&#34;color: #999988; font-style: italic&#34;&gt;&amp;lt;!-- websockets.html --&amp;gt;&lt;/span&gt;
-&amp;lt;&lt;span style=&#34;color: #000080&#34;&gt;input&lt;/span&gt; &lt;span style=&#34;color: #008080&#34;&gt;id&lt;/span&gt;&lt;span style=&#34;font-weight: bold&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color: #bb8844&#34;&gt;&amp;quot;input&amp;quot;&lt;/span&gt; &lt;span style=&#34;color: #008080&#34;&gt;type&lt;/span&gt;&lt;span style=&#34;font-weight: bold&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color: #bb8844&#34;&gt;&amp;quot;text&amp;quot;&lt;/span&gt; /&amp;gt;
-&amp;lt;&lt;span style=&#34;color: #000080&#34;&gt;button&lt;/span&gt; &lt;span style=&#34;color: #008080&#34;&gt;onclick&lt;/span&gt;&lt;span style=&#34;font-weight: bold&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color: #bb8844&#34;&gt;&amp;quot;send()&amp;quot;&lt;/span&gt;&amp;gt;Send&amp;lt;/&lt;span style=&#34;color: #000080&#34;&gt;button&lt;/span&gt;&amp;gt;
-&amp;lt;&lt;span style=&#34;color: #000080&#34;&gt;pre&lt;/span&gt; &lt;span style=&#34;color: #008080&#34;&gt;id&lt;/span&gt;&lt;span style=&#34;font-weight: bold&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color: #bb8844&#34;&gt;&amp;quot;output&amp;quot;&lt;/span&gt;&amp;gt;&amp;lt;/&lt;span style=&#34;color: #000080&#34;&gt;pre&lt;/span&gt;&amp;gt;
-&amp;lt;&lt;span style=&#34;color: #000080&#34;&gt;script&lt;/span&gt;&amp;gt;
-	&lt;span style=&#34;font-weight: bold&#34;&gt;var&lt;/span&gt; input &lt;span style=&#34;font-weight: bold&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color: #999999&#34;&gt;document&lt;/span&gt;.getElementById(&lt;span style=&#34;color: #bb8844&#34;&gt;&amp;quot;input&amp;quot;&lt;/span&gt;);
-	&lt;span style=&#34;font-weight: bold&#34;&gt;var&lt;/span&gt; output &lt;span style=&#34;font-weight: bold&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color: #999999&#34;&gt;document&lt;/span&gt;.getElementById(&lt;span style=&#34;color: #bb8844&#34;&gt;&amp;quot;output&amp;quot;&lt;/span&gt;);
-	&lt;span style=&#34;font-weight: bold&#34;&gt;var&lt;/span&gt; socket &lt;span style=&#34;font-weight: bold&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;font-weight: bold&#34;&gt;new&lt;/span&gt; WebSocket(&lt;span style=&#34;color: #bb8844&#34;&gt;&amp;quot;ws://localhost:8080/echo&amp;quot;&lt;/span&gt;);
+&lt;pre&gt;&lt;code&gt;&amp;lt;!-- websockets.html --&amp;gt;
+&amp;lt;input id=&amp;quot;input&amp;quot; type=&amp;quot;text&amp;quot; /&amp;gt;
+&amp;lt;button onclick=&amp;quot;send()&amp;quot;&amp;gt;Send&amp;lt;/button&amp;gt;
+&amp;lt;pre id=&amp;quot;output&amp;quot;&amp;gt;&amp;lt;/pre&amp;gt;
+&amp;lt;script src=&amp;quot;/iris-ws.js&amp;quot;&amp;gt;&amp;lt;/script&amp;gt;
+&amp;lt;script&amp;gt;
+    var input = document.getElementById(&amp;quot;input&amp;quot;);
+    var output = document.getElementById(&amp;quot;output&amp;quot;);
 
-	socket.onopen &lt;span style=&#34;font-weight: bold&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;font-weight: bold&#34;&gt;function&lt;/span&gt; () {
-		output.innerHTML &lt;span style=&#34;font-weight: bold&#34;&gt;+=&lt;/span&gt; &lt;span style=&#34;color: #bb8844&#34;&gt;&amp;quot;Status: Connected\n&amp;quot;&lt;/span&gt;;
-	};
+    // Ws comes from the auto-served &#39;/iris-ws.js&#39;
+    var socket = new Ws(&amp;quot;ws://localhost:8080/echo&amp;quot;);
+    socket.OnConnect(function () {
+        output.innerHTML += &amp;quot;Status: Connected\n&amp;quot;;
+    });
 
-	socket.onmessage &lt;span style=&#34;font-weight: bold&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;font-weight: bold&#34;&gt;function&lt;/span&gt; (e) {
-		output.innerHTML &lt;span style=&#34;font-weight: bold&#34;&gt;+=&lt;/span&gt; &lt;span style=&#34;color: #bb8844&#34;&gt;&amp;quot;Server: &amp;quot;&lt;/span&gt; &lt;span style=&#34;font-weight: bold&#34;&gt;+&lt;/span&gt; e.data &lt;span style=&#34;font-weight: bold&#34;&gt;+&lt;/span&gt; &lt;span style=&#34;color: #bb8844&#34;&gt;&amp;quot;\n&amp;quot;&lt;/span&gt;;
-	};
+    socket.OnDisconnect(function () {
+        output.innerHTML += &amp;quot;Status: Disconnected\n&amp;quot;;
+    });
 
-	&lt;span style=&#34;font-weight: bold&#34;&gt;function&lt;/span&gt; send() {
-		socket.send(input.value);
-		input.value &lt;span style=&#34;font-weight: bold&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color: #bb8844&#34;&gt;&amp;quot;&amp;quot;&lt;/span&gt;;
-	}
-&amp;lt;/&lt;span style=&#34;color: #000080&#34;&gt;script&lt;/span&gt;&amp;gt;
-&lt;/pre&gt;&lt;/div&gt;
+    // read events from the server
+    socket.On(&amp;quot;chat&amp;quot;, function (msg) {
+        output.innerHTML += &amp;quot;Server: &amp;quot; + msg + &amp;quot;\n&amp;quot;;
+    });
 
-&lt;div class=&#34;highlight&#34; style=&#34;background: #ffffff&#34;&gt;&lt;pre style=&#34;line-height: 125%&#34;&gt;&lt;span&gt;&lt;/span&gt;&lt;span style=&#34;color: #555555&#34;&gt;$&lt;/span&gt; go run websockets.go
-&lt;span style=&#34;color: #888888&#34;&gt;[127.0.0.1]:53403 sent: Hello Go Web Examples, you&amp;#39;re doing great!&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
+    function send() {
+        // send chat event data to the server
+        socket.Emit(&amp;quot;chat&amp;quot;, input.value);
+        input.value = &amp;quot;&amp;quot;;
+    }
+&amp;lt;/script&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;pre&gt;&lt;code&gt;$ go run websockets.go
+[127.0.0.1]:53403 sent: Hello Go Web Examples, you&#39;re doing great!
+&lt;/code&gt;&lt;/pre&gt;
 
 &lt;div class=&#34;demo&#34;&gt;
     &lt;input type=&#34;text&#34;&gt;
     &lt;button&gt;Send&lt;/button&gt;
     &lt;pre&gt;Status: Connected
-Server: Hello Go Web Examples, you&amp;rsquo;re doing great!&lt;/pre&gt;
-&lt;/div&gt;&lt;/p&gt;
+Server: Hello Go Web Examples, you&#39;re doing great!&lt;/pre&gt;
+&lt;/div&gt;
 </description>
     </item>
     
     <item>
       <title>Middleware (Basic)</title>
-      <link>https://gowebexamples.github.io/basic-middleware/</link>
+      <link>https://docs.iris-go.com/middleware/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
-      <guid>https://gowebexamples.github.io/basic-middleware/</guid>
+      <guid>https://docs.iris-go.com/middleware/</guid>
       <description>
 
-&lt;h1 id=&#34;go-web-examples-middleware-basic&#34;&gt;&lt;a href=&#34;https://gowebexamples.github.io/&#34;&gt;Go Web Examples:&lt;/a&gt; Middleware (Basic)&lt;/h1&gt;
+&lt;h1 id=&#34;go-web-examples-middleware-basic&#34;&gt;&lt;a href=&#34;https://docs.iris-go.com/&#34;&gt;Go Web Examples:&lt;/a&gt; Middleware (Basic)&lt;/h1&gt;
 
 &lt;p&gt;This example will show how to create basic logging middleware in Go.&lt;/p&gt;
 
-&lt;p&gt;A middleware simply takes a &lt;code&gt;http.HandlerFunc&lt;/code&gt; as one of its parameters, wraps it and returns a new &lt;code&gt;http.HandlerFunc&lt;/code&gt; for the server to call.&lt;/p&gt;
+&lt;p&gt;An &lt;code&gt;Iris&lt;/code&gt; Middleware is just a chain of &lt;code&gt;iris.HandlerFunc&lt;/code&gt; runs explicity by calling &lt;code&gt;context.Next()&lt;/code&gt;. On each request route&amp;rsquo;s handlers share the same &lt;code&gt;*Context&lt;/code&gt;, so these handlers can share information or stop execution the execution of the next in the chain.(When &lt;code&gt;context.Next&lt;/code&gt; is missing then the next handler doesn&amp;rsquo;t run).&lt;/p&gt;
 
-&lt;p&gt;&lt;div class=&#34;highlight&#34; style=&#34;background: #ffffff&#34;&gt;&lt;pre style=&#34;line-height: 125%&#34;&gt;&lt;span&gt;&lt;/span&gt;&lt;span style=&#34;color: #999988; font-style: italic&#34;&gt;// basic-middleware.go&lt;/span&gt;
-&lt;span style=&#34;font-weight: bold&#34;&gt;package&lt;/span&gt; main
+&lt;pre&gt;&lt;code&gt;// basic-middleware.go
+package main
 
-&lt;span style=&#34;font-weight: bold&#34;&gt;import&lt;/span&gt; (
-	&lt;span style=&#34;color: #bb8844&#34;&gt;&amp;quot;fmt&amp;quot;&lt;/span&gt;
-	&lt;span style=&#34;color: #bb8844&#34;&gt;&amp;quot;log&amp;quot;&lt;/span&gt;
-	&lt;span style=&#34;color: #bb8844&#34;&gt;&amp;quot;net/http&amp;quot;&lt;/span&gt;
+import (
+    &amp;quot;gopkg.in/kataras/iris.v6&amp;quot;
+    &amp;quot;gopkg.in/kataras/iris.v6/adaptors/httprouter&amp;quot;
 )
 
-&lt;span style=&#34;font-weight: bold&#34;&gt;func&lt;/span&gt; logging(f http.HandlerFunc) http.HandlerFunc {
-	&lt;span style=&#34;font-weight: bold&#34;&gt;return&lt;/span&gt; &lt;span style=&#34;font-weight: bold&#34;&gt;func&lt;/span&gt;(w http.ResponseWriter, r &lt;span style=&#34;font-weight: bold&#34;&gt;*&lt;/span&gt;http.Request) {
-		log.Println(r.URL.Path)
-		f(w, r)
-	}
+func logging(f http.HandlerFunc) http.HandlerFunc {
+    return func(w http.ResponseWriter, r *http.Request) {
+        log.Println(r.URL.Path)
+        f(w, r)
+    }
 }
 
-&lt;span style=&#34;font-weight: bold&#34;&gt;func&lt;/span&gt; foo(w http.ResponseWriter, r &lt;span style=&#34;font-weight: bold&#34;&gt;*&lt;/span&gt;http.Request) {
-	fmt.Fprintln(w, &lt;span style=&#34;color: #bb8844&#34;&gt;&amp;quot;foo&amp;quot;&lt;/span&gt;)
+func foo(w http.ResponseWriter, r *http.Request) {
+    fmt.Fprintln(w, &amp;quot;foo&amp;quot;)
 }
 
-&lt;span style=&#34;font-weight: bold&#34;&gt;func&lt;/span&gt; bar(w http.ResponseWriter, r &lt;span style=&#34;font-weight: bold&#34;&gt;*&lt;/span&gt;http.Request) {
-	fmt.Fprintln(w, &lt;span style=&#34;color: #bb8844&#34;&gt;&amp;quot;bar&amp;quot;&lt;/span&gt;)
+func bar(w http.ResponseWriter, r *http.Request) {
+    fmt.Fprintln(w, &amp;quot;bar&amp;quot;)
 }
 
-&lt;span style=&#34;font-weight: bold&#34;&gt;func&lt;/span&gt; main() {
-	http.HandleFunc(&lt;span style=&#34;color: #bb8844&#34;&gt;&amp;quot;/foo&amp;quot;&lt;/span&gt;, logging(foo))
-	http.HandleFunc(&lt;span style=&#34;color: #bb8844&#34;&gt;&amp;quot;/bar&amp;quot;&lt;/span&gt;, logging(bar))
+func main() {
+    app := iris.New()
+    app.Adapt(iris.DevLogger())
+    app.Adapt(httprouter.New())
 
-	http.ListenAndServe(&lt;span style=&#34;color: #bb8844&#34;&gt;&amp;quot;:8080&amp;quot;&lt;/span&gt;, &lt;span style=&#34;font-weight: bold&#34;&gt;nil&lt;/span&gt;)
+    app.Get(&amp;quot;/foo&amp;quot;, logging(foo))
+    app.Get(&amp;quot;/bar&amp;quot;, logging(bar))
+
+    http.ListenAndServe(&amp;quot;:8080&amp;quot;, nil)
 }
-&lt;/pre&gt;&lt;/div&gt;
+&lt;/code&gt;&lt;/pre&gt;
 
-&lt;div class=&#34;highlight&#34; style=&#34;background: #ffffff&#34;&gt;&lt;pre style=&#34;line-height: 125%&#34;&gt;&lt;span&gt;&lt;/span&gt;&lt;span style=&#34;color: #555555&#34;&gt;$&lt;/span&gt; go run basic-middleware.go
-&lt;span style=&#34;color: #888888&#34;&gt;2017/02/10 23:59:34 /foo&lt;/span&gt;
-&lt;span style=&#34;color: #888888&#34;&gt;2017/02/10 23:59:35 /bar&lt;/span&gt;
-&lt;span style=&#34;color: #888888&#34;&gt;2017/02/10 23:59:36 /foo?bar&lt;/span&gt;
+&lt;pre&gt;&lt;code&gt;$ go run basic-middleware.go
+2017/02/10 23:59:34 /foo
+2017/02/10 23:59:35 /bar
+2017/02/10 23:59:36 /foo?bar
 
-&lt;span style=&#34;color: #555555&#34;&gt;$&lt;/span&gt; curl -s http://localhost:8080/foo
-&lt;span style=&#34;color: #555555&#34;&gt;$&lt;/span&gt; curl -s http://localhost:8080/bar
-&lt;span style=&#34;color: #555555&#34;&gt;$&lt;/span&gt; curl -s http://localhost:8080/foo?bar
-&lt;/pre&gt;&lt;/div&gt;
-&lt;/p&gt;
+$ curl -s http://localhost:8080/foo
+$ curl -s http://localhost:8080/bar
+$ curl -s http://localhost:8080/foo?bar
+&lt;/code&gt;&lt;/pre&gt;
 </description>
     </item>
     
     <item>
-      <title>Middleware (Advanced)</title>
-      <link>https://gowebexamples.github.io/advanced-middleware/</link>
+      <title>Middleware (Net/http)</title>
+      <link>https://docs.iris-go.com/middleware-nethttp/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
-      <guid>https://gowebexamples.github.io/advanced-middleware/</guid>
+      <guid>https://docs.iris-go.com/middleware-nethttp/</guid>
       <description>
 
-&lt;h1 id=&#34;go-web-examples-middleware-advanced&#34;&gt;&lt;a href=&#34;https://gowebexamples.github.io/&#34;&gt;Go Web Examples:&lt;/a&gt; Middleware (Advanced)&lt;/h1&gt;
+&lt;h1 id=&#34;go-web-examples-middleware-advanced&#34;&gt;&lt;a href=&#34;https://docs.iris-go.com/&#34;&gt;Go Web Examples:&lt;/a&gt; Middleware (Advanced)&lt;/h1&gt;
 
-&lt;p&gt;This example will show how to create a more advanced version of middleware in Go.&lt;/p&gt;
-
-&lt;p&gt;A middleware in itself simply takes a &lt;code&gt;http.HandlerFunc&lt;/code&gt; as one of its parameters, wraps it and returns a new &lt;code&gt;http.HandlerFunc&lt;/code&gt; for the server to call.&lt;/p&gt;
-
-&lt;p&gt;Here we define a new type &lt;code&gt;Middleware&lt;/code&gt; which makes it eventually easier to chain multiple middlewares together. This idea is inspired by Mat Ryers&amp;rsquo; talk about Building APIs.
-You can find a more detailed explaination including the talk &lt;a target=&#34;_blank&#34; href=&#34;https://medium.com/@matryer/writing-middleware-in-golang-and-how-go-makes-it-so-much-fun-4375c1246e81&#34;&gt;here&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;Most of the middleware that you will use are not created only for Iris, they are created for the standard &lt;code&gt;net/http&lt;/code&gt; package.
+So how Iris can play with them? Iris plays nice with &lt;code&gt;net/http&lt;/code&gt; package as a low-level acccess framework. You can wrap a &lt;code&gt;http.Handler&lt;/code&gt; or a  middleware of form &lt;code&gt;func(http.ResponseWriter, *http.Request, next http.HandlerFunc)&lt;/code&gt; with the &lt;code&gt;iris.ToHandler(h)&lt;/code&gt; and you will receive an &lt;code&gt;iris.HandlerFunc&lt;/code&gt; which you can use to the entire framework!&lt;/p&gt;
 
 &lt;p&gt;&lt;br /&gt;
-This snippet explains in detail how a new middleware is created. In the full example below, we reduce this version by some boilerplate code.
-&lt;div class=&#34;highlight&#34; style=&#34;background: #ffffff&#34;&gt;&lt;pre style=&#34;line-height: 125%&#34;&gt;&lt;span&gt;&lt;/span&gt;&lt;span style=&#34;font-weight: bold&#34;&gt;func&lt;/span&gt; createNewMiddleware() Middleware {
+This snippet explains in detail how a new middleware is created. In the full example below, we reduce this version by some boilerplate code.&lt;/p&gt;
 
-	&lt;span style=&#34;color: #999988; font-style: italic&#34;&gt;// Create a new Middleware&lt;/span&gt;
-	middleware &lt;span style=&#34;font-weight: bold&#34;&gt;:=&lt;/span&gt; &lt;span style=&#34;font-weight: bold&#34;&gt;func&lt;/span&gt;(next http.HandlerFunc) http.HandlerFunc {
+&lt;pre&gt;&lt;code&gt;func createNewMiddleware() Middleware {
 
-		&lt;span style=&#34;color: #999988; font-style: italic&#34;&gt;// Define the http.HandlerFunc which is called by the server eventually&lt;/span&gt;
-		handler &lt;span style=&#34;font-weight: bold&#34;&gt;:=&lt;/span&gt; &lt;span style=&#34;font-weight: bold&#34;&gt;func&lt;/span&gt;(w http.ResponseWriter, r &lt;span style=&#34;font-weight: bold&#34;&gt;*&lt;/span&gt;http.Request) {
+    // Create a new Middleware
+    middleware := func(next http.HandlerFunc) http.HandlerFunc {
 
-			&lt;span style=&#34;color: #999988; font-style: italic&#34;&gt;// ... do middleware things&lt;/span&gt;
+        // Define the http.HandlerFunc which is called by the server eventually
+        handler := func(w http.ResponseWriter, r *http.Request) {
 
-			&lt;span style=&#34;color: #999988; font-style: italic&#34;&gt;// Call the next middleware/handler in chain&lt;/span&gt;
-			next(w, r)
-		}
+            // ... do middleware things
 
-		&lt;span style=&#34;color: #999988; font-style: italic&#34;&gt;// Return newly created handler&lt;/span&gt;
-		&lt;span style=&#34;font-weight: bold&#34;&gt;return&lt;/span&gt; handler
-	}
+            // Call the next middleware/handler in chain
+            next(w, r)
+        }
 
-	&lt;span style=&#34;color: #999988; font-style: italic&#34;&gt;// Return newly created middleware&lt;/span&gt;
-	&lt;span style=&#34;font-weight: bold&#34;&gt;return&lt;/span&gt; middleware
+        // Return newly created handler
+        return handler
+    }
+
+    // Return newly created middleware
+    return middleware
 }
-&lt;/pre&gt;&lt;/div&gt;
+&lt;/code&gt;&lt;/pre&gt;
 
-&lt;br /&gt;
-This is the full example:
-&lt;div class=&#34;highlight&#34; style=&#34;background: #ffffff&#34;&gt;&lt;pre style=&#34;line-height: 125%&#34;&gt;&lt;span&gt;&lt;/span&gt;&lt;span style=&#34;color: #999988; font-style: italic&#34;&gt;// advanced-middleware.go&lt;/span&gt;
-&lt;span style=&#34;font-weight: bold&#34;&gt;package&lt;/span&gt; main
+&lt;p&gt;&lt;br /&gt;
+This is the full example:&lt;/p&gt;
 
-&lt;span style=&#34;font-weight: bold&#34;&gt;import&lt;/span&gt; (
-	&lt;span style=&#34;color: #bb8844&#34;&gt;&amp;quot;fmt&amp;quot;&lt;/span&gt;
-	&lt;span style=&#34;color: #bb8844&#34;&gt;&amp;quot;log&amp;quot;&lt;/span&gt;
-	&lt;span style=&#34;color: #bb8844&#34;&gt;&amp;quot;net/http&amp;quot;&lt;/span&gt;
-	&lt;span style=&#34;color: #bb8844&#34;&gt;&amp;quot;time&amp;quot;&lt;/span&gt;
+&lt;pre&gt;&lt;code&gt;// advanced-middleware.go
+package main
+
+import (
+    &amp;quot;fmt&amp;quot;
+    &amp;quot;log&amp;quot;
+    &amp;quot;net/http&amp;quot;
+    &amp;quot;time&amp;quot;
 )
 
-&lt;span style=&#34;font-weight: bold&#34;&gt;type&lt;/span&gt; Middleware &lt;span style=&#34;font-weight: bold&#34;&gt;func&lt;/span&gt;(http.HandlerFunc) http.HandlerFunc
+type Middleware func(http.HandlerFunc) http.HandlerFunc
 
-&lt;span style=&#34;color: #999988; font-style: italic&#34;&gt;// Logging logs all requests with its path and the time it took to process&lt;/span&gt;
-&lt;span style=&#34;font-weight: bold&#34;&gt;func&lt;/span&gt; Logging() Middleware {
+// Logging logs all requests with its path and the time it took to process
+func Logging() Middleware {
 
-	&lt;span style=&#34;color: #999988; font-style: italic&#34;&gt;// Create a new Middleware&lt;/span&gt;
-	&lt;span style=&#34;font-weight: bold&#34;&gt;return&lt;/span&gt; &lt;span style=&#34;font-weight: bold&#34;&gt;func&lt;/span&gt;(f http.HandlerFunc) http.HandlerFunc {
+    // Create a new Middleware
+    return func(f http.HandlerFunc) http.HandlerFunc {
 
-		&lt;span style=&#34;color: #999988; font-style: italic&#34;&gt;// Define the http.HandlerFunc&lt;/span&gt;
-		&lt;span style=&#34;font-weight: bold&#34;&gt;return&lt;/span&gt; &lt;span style=&#34;font-weight: bold&#34;&gt;func&lt;/span&gt;(w http.ResponseWriter, r &lt;span style=&#34;font-weight: bold&#34;&gt;*&lt;/span&gt;http.Request) {
+        // Define the http.HandlerFunc
+        return func(w http.ResponseWriter, r *http.Request) {
 
-			&lt;span style=&#34;color: #999988; font-style: italic&#34;&gt;// Do middleware things&lt;/span&gt;
-			start &lt;span style=&#34;font-weight: bold&#34;&gt;:=&lt;/span&gt; time.Now()
-			&lt;span style=&#34;font-weight: bold&#34;&gt;defer&lt;/span&gt; &lt;span style=&#34;font-weight: bold&#34;&gt;func&lt;/span&gt;() { log.Println(r.URL.Path, time.Since(start)) }()
+            // Do middleware things
+            start := time.Now()
+            defer func() { log.Println(r.URL.Path, time.Since(start)) }()
 
-			&lt;span style=&#34;color: #999988; font-style: italic&#34;&gt;// Call the next middleware/handler in chain&lt;/span&gt;
-			f(w, r)
-		}
-	}
+            // Call the next middleware/handler in chain
+            f(w, r)
+        }
+    }
 }
 
-&lt;span style=&#34;color: #999988; font-style: italic&#34;&gt;// Method ensures that only a url can me requested with a specific method, else returns a 400 Bad Request&lt;/span&gt;
-&lt;span style=&#34;font-weight: bold&#34;&gt;func&lt;/span&gt; Method(m &lt;span style=&#34;color: #445588; font-weight: bold&#34;&gt;string&lt;/span&gt;) Middleware {
+// Method ensures that only a url can me requested with a specific method, else returns a 400 Bad Request
+func Method(m string) Middleware {
 
-	&lt;span style=&#34;color: #999988; font-style: italic&#34;&gt;// Create a new Middleware&lt;/span&gt;
-	&lt;span style=&#34;font-weight: bold&#34;&gt;return&lt;/span&gt; &lt;span style=&#34;font-weight: bold&#34;&gt;func&lt;/span&gt;(f http.HandlerFunc) http.HandlerFunc {
+    // Create a new Middleware
+    return func(f http.HandlerFunc) http.HandlerFunc {
 
-		&lt;span style=&#34;color: #999988; font-style: italic&#34;&gt;// Define the http.HandlerFunc&lt;/span&gt;
-		&lt;span style=&#34;font-weight: bold&#34;&gt;return&lt;/span&gt; &lt;span style=&#34;font-weight: bold&#34;&gt;func&lt;/span&gt;(w http.ResponseWriter, r &lt;span style=&#34;font-weight: bold&#34;&gt;*&lt;/span&gt;http.Request) {
+        // Define the http.HandlerFunc
+        return func(w http.ResponseWriter, r *http.Request) {
 
-			&lt;span style=&#34;color: #999988; font-style: italic&#34;&gt;// Do middleware things&lt;/span&gt;
-			&lt;span style=&#34;font-weight: bold&#34;&gt;if&lt;/span&gt; r.Method &lt;span style=&#34;font-weight: bold&#34;&gt;!=&lt;/span&gt; m {
-				http.Error(w, http.StatusText(http.StatusBadRequest), http.StatusBadRequest)
-				&lt;span style=&#34;font-weight: bold&#34;&gt;return&lt;/span&gt;
-			}
+            // Do middleware things
+            if r.Method != m {
+                http.Error(w, http.StatusText(http.StatusBadRequest), http.StatusBadRequest)
+                return
+            }
 
-			&lt;span style=&#34;color: #999988; font-style: italic&#34;&gt;// Call the next middleware/handler in chain&lt;/span&gt;
-			f(w, r)
-		}
-	}
+            // Call the next middleware/handler in chain
+            f(w, r)
+        }
+    }
 }
 
-&lt;span style=&#34;color: #999988; font-style: italic&#34;&gt;// Chain applies middlewares to a http.HandlerFunc&lt;/span&gt;
-&lt;span style=&#34;font-weight: bold&#34;&gt;func&lt;/span&gt; Chain(f http.HandlerFunc, middlewares &lt;span style=&#34;font-weight: bold&#34;&gt;...&lt;/span&gt;Middleware) http.HandlerFunc {
-	&lt;span style=&#34;font-weight: bold&#34;&gt;for&lt;/span&gt; _, m &lt;span style=&#34;font-weight: bold&#34;&gt;:=&lt;/span&gt; &lt;span style=&#34;font-weight: bold&#34;&gt;range&lt;/span&gt; middlewares {
-		f = m(f)
-	}
-	&lt;span style=&#34;font-weight: bold&#34;&gt;return&lt;/span&gt; f
+// Chain applies middlewares to a http.HandlerFunc
+func Chain(f http.HandlerFunc, middlewares ...Middleware) http.HandlerFunc {
+    for _, m := range middlewares {
+        f = m(f)
+    }
+    return f
 }
 
-&lt;span style=&#34;font-weight: bold&#34;&gt;func&lt;/span&gt; Hello(w http.ResponseWriter, r &lt;span style=&#34;font-weight: bold&#34;&gt;*&lt;/span&gt;http.Request) {
-	fmt.Fprintln(w, &lt;span style=&#34;color: #bb8844&#34;&gt;&amp;quot;hello world&amp;quot;&lt;/span&gt;)
+func Hello(w http.ResponseWriter, r *http.Request) {
+    fmt.Fprintln(w, &amp;quot;hello world&amp;quot;)
 }
 
-&lt;span style=&#34;font-weight: bold&#34;&gt;func&lt;/span&gt; main() {
-	http.HandleFunc(&lt;span style=&#34;color: #bb8844&#34;&gt;&amp;quot;/&amp;quot;&lt;/span&gt;, Chain(Hello, Method(&lt;span style=&#34;color: #bb8844&#34;&gt;&amp;quot;GET&amp;quot;&lt;/span&gt;), Logging()))
-	http.ListenAndServe(&lt;span style=&#34;color: #bb8844&#34;&gt;&amp;quot;:8080&amp;quot;&lt;/span&gt;, &lt;span style=&#34;font-weight: bold&#34;&gt;nil&lt;/span&gt;)
+func main() {
+    http.HandleFunc(&amp;quot;/&amp;quot;, Chain(Hello, Method(&amp;quot;GET&amp;quot;), Logging()))
+    http.ListenAndServe(&amp;quot;:8080&amp;quot;, nil)
 }
-&lt;/pre&gt;&lt;/div&gt;
+&lt;/code&gt;&lt;/pre&gt;
 
-&lt;div class=&#34;highlight&#34; style=&#34;background: #ffffff&#34;&gt;&lt;pre style=&#34;line-height: 125%&#34;&gt;&lt;span&gt;&lt;/span&gt;&lt;span style=&#34;color: #555555&#34;&gt;$&lt;/span&gt; go run advanced-middleware.go
-&lt;span style=&#34;color: #888888&#34;&gt;2017/02/11 00:34:53 / 0s&lt;/span&gt;
+&lt;pre&gt;&lt;code&gt;$ go run advanced-middleware.go
+2017/02/11 00:34:53 / 0s
 
-&lt;span style=&#34;color: #555555&#34;&gt;$&lt;/span&gt; curl -s http://localhost:8080/
-&lt;span style=&#34;color: #888888&#34;&gt;hello world&lt;/span&gt;
+$ curl -s http://localhost:8080/
+hello world
 
-&lt;span style=&#34;color: #555555&#34;&gt;$&lt;/span&gt; curl -s -XPOST http://localhost:8080/
-&lt;span style=&#34;color: #888888&#34;&gt;Bad Request&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-&lt;/p&gt;
+$ curl -s -XPOST http://localhost:8080/
+Bad Request
+&lt;/code&gt;&lt;/pre&gt;
 </description>
     </item>
     

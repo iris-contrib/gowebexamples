@@ -2,14 +2,13 @@
 <html lang="en">
 <head>
 	
-		<title>Go Web Examples: Password Hashing</title>
+		<title>Iris Go Web Examples: Password Hashing</title>
 	
 	<meta charset="utf-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
-	<meta name="google-site-verification" content="Ztd8vuEnIdHM7XE9qXXPgfoVjq9FWnHtK8Y8la08CRM" />
 	<meta name="description" content="This example will show how to hash passwords using bcrypt in the Go programming language." />
 	<link rel="alternate" type="application/rss+xml" href="/index.xml" />
-	<link rel="canonical" href="https://gowebexamples.github.io/password-hashing/">
+	<link rel="canonical" href="https://docs.iris-go.com/password-hashing/">
 	<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
 	<link rel="icon" type="image/png" href="/favicon-32x32.png" sizes="32x32">
 	<link rel="icon" type="image/png" href="/favicon-16x16.png" sizes="16x16">
@@ -56,62 +55,60 @@ For this we have to <code>go get</code> the golang bcrypt library like so:</p>
 
 <p><code>$ go get golang.org/x/crypto/bcrypt</code></p>
 
-<p>From now on, every application we write will be able to make use of this library.
-<div class="highlight" style="background: #ffffff"><pre style="line-height: 125%"><span></span><span style="color: #999988; font-style: italic">// passwords.go</span>
-<span style="font-weight: bold">package</span> main
+<p>From now on, every application we write will be able to make use of this library.</p>
 
-<span style="font-weight: bold">import</span> (
-	<span style="color: #bb8844">&quot;fmt&quot;</span>
+<pre><code>// passwords.go
+package main
 
-	<span style="color: #bb8844">&quot;golang.org/x/crypto/bcrypt&quot;</span>
+import (
+    &quot;fmt&quot;
+
+    &quot;golang.org/x/crypto/bcrypt&quot;
 )
 
-<span style="font-weight: bold">func</span> HashPassword(password <span style="color: #445588; font-weight: bold">string</span>) (<span style="color: #445588; font-weight: bold">string</span>, <span style="color: #445588; font-weight: bold">error</span>) {
-	bytes, err <span style="font-weight: bold">:=</span> bcrypt.GenerateFromPassword([]<span style="color: #999999">byte</span>(password), <span style="color: #009999">14</span>)
-	<span style="font-weight: bold">return</span> <span style="color: #999999">string</span>(bytes), err
+func HashPassword(password string) (string, error) {
+    bytes, err := bcrypt.GenerateFromPassword([]byte(password), 14)
+    return string(bytes), err
 }
 
-<span style="font-weight: bold">func</span> CheckPasswordHash(password, hash <span style="color: #445588; font-weight: bold">string</span>) <span style="color: #445588; font-weight: bold">bool</span> {
-	err <span style="font-weight: bold">:=</span> bcrypt.CompareHashAndPassword([]<span style="color: #999999">byte</span>(hash), []<span style="color: #999999">byte</span>(password))
-	<span style="font-weight: bold">return</span> err <span style="font-weight: bold">==</span> <span style="font-weight: bold">nil</span>
+func CheckPasswordHash(password, hash string) bool {
+    err := bcrypt.CompareHashAndPassword([]byte(hash), []byte(password))
+    return err == nil
 }
 
-<span style="font-weight: bold">func</span> main() {
-	password <span style="font-weight: bold">:=</span> <span style="color: #bb8844">&quot;secret&quot;</span>
-	hash, _ <span style="font-weight: bold">:=</span> HashPassword(password) <span style="color: #999988; font-style: italic">// ignore error for the sake of simplicity</span>
+func main() {
+    password := &quot;secret&quot;
+    hash, _ := HashPassword(password) // ignore error for the sake of simplicity
 
-	fmt.Println(<span style="color: #bb8844">&quot;Password:&quot;</span>, password)
-	fmt.Println(<span style="color: #bb8844">&quot;Hash:    &quot;</span>, hash)
+    fmt.Println(&quot;Password:&quot;, password)
+    fmt.Println(&quot;Hash:    &quot;, hash)
 
-	match <span style="font-weight: bold">:=</span> CheckPasswordHash(password, hash)
-	fmt.Println(<span style="color: #bb8844">&quot;Match:   &quot;</span>, match)
+    match := CheckPasswordHash(password, hash)
+    fmt.Println(&quot;Match:   &quot;, match)
 }
-</pre></div>
 
-<div class="highlight" style="background: #ffffff"><pre style="line-height: 125%"><span></span><span style="color: #555555">$</span> go run passwords.go
-<span style="color: #888888">Password: secret</span>
-<span style="color: #888888">Hash:     $2a$14$ajq8Q7fbtFRQvXpdCq7Jcuy.Rx1h/L4J60Otx.gyNLbAYctGMJ9tK</span>
-<span style="color: #888888">Match:    true</span>
-</pre></div>
-</p>
+</code></pre>
+
+<pre><code>$ go run passwords.go
+Password: secret
+Hash:     $2a$14$ajq8Q7fbtFRQvXpdCq7Jcuy.Rx1h/L4J60Otx.gyNLbAYctGMJ9tK
+Match:    true
+</code></pre>
 
 	<div class="footer">
 		<div class="links">
 		
 			
-			<a title="Sessions" class="back" href="https://gowebexamples.github.io/sessions/">← back</a>
+			<a title="Sessions" class="back" href="https://docs.iris-go.com/sessions/">← back</a>
 			
-			<a title="Go Web Examples" class="home" href="/">home</a>
+			<a title="Iris Go Web Examples" class="home" href="/">home</a>
 			
-			<a title="Websockets" class="forward" href="https://gowebexamples.github.io/websockets/">forward →</a>
+			<a title="Websockets" class="forward" href="https://docs.iris-go.com/websockets/">forward →</a>
 			
 		
 		</div>
 		<br /><br />
-		by <a href="https://github.com/philippta">philippta</a>
-		| <script>document.write(atob("PGEgaHJlZj0ibWFpbHRvOnAudGFubGFrQHdlYi5kZSI+ZmVlZGJhY2s8L2E+"));</script>
-		| <a href="https://github.com/gowebexamples/gowebexamples">source</a>
-		| <a href="https://github.com/gowebexamples/gowebexamples#license">license</a>
+		 <a href="https://github.com/kataras/iris">Iris web framework</a>
 	</div>
 </div>
 </body>

@@ -6,79 +6,78 @@ description = "This example will show how to store data in session cookies using
 
 # [Go Web Examples:](/) Sessions
 
-This example will show how to store data in session cookies using the popular  <a target="_blank" href="https://github.com/gorilla/sessions">gorilla/sessions</a> package in Go.
+This example will show how to store data from a session.
 
-Cookies are small pieces of data stored in the browser of a user and are sent to our server on each request. In them, we can store e.g. whether or not a user is logged in into our website and figure out who he actually is (in our system).
+You don't need any third-party library except Iris, but if you want you can use anything, remember Iris is fully compatible with the standard library. You can find a more detailed example by pressing [here](https://github.com/kataras/iris/blob/v6/adaptors/sessions/_example/main.go).
 
 In this example we will only allow authenticated users to view our secret message on the `/secret` page. To get access to it, the will first have to visit `/login` to get a valid session cookie, which logs him in. Additionally he can visit `/logout` to revoke his access to our secret message.
-{{< highlight go >}}
+
+```
 // sessions.go
 package main
 
 import (
-	"fmt"
-	"net/http"
-
-	"github.com/gorilla/sessions"
+	"gopkg.in/kataras/iris.v6"
+	"gopkg.in/kataras/iris.v6/adaptors/httprouter"
+	"gopkg.in/kataras/iris.v6/adaptors/sessions"
 )
 
 var (
-	// key must be 16, 24 or 32 bytes long (AES-128, AES-192 or AES-256)
-	key = []byte("super-secret-key")
-	store = sessions.NewCookieStore(key)
+	key = "my_sessionid"
 )
 
-func secret(w http.ResponseWriter, r *http.Request) {
-	session, _ := store.Get(r, "cookie-name")
+func secret(ctx *iris.Context) {
 
 	// Check if user is authenticated
-	if auth, ok := session.Values["authenticated"].(bool); !ok || !auth {
-		http.Error(w, "Forbidden", http.StatusForbidden)
+	if auth, _ := ctx.Session().GetBoolean(authenticated); !auth {
+		ctx.EmitError(iris.StatusForbidden)
 		return
 	}
 
 	// Print secret message
-	fmt.Fprintln(w, "The cake is a lie!")
+	ctx.WriteString("The cake is a lie!")
 }
 
-func login(w http.ResponseWriter, r *http.Request) {
-	session, _ := store.Get(r, "cookie-name")
+func login(ctx *iris.Context) {
+	session := ctx.Session()
 
 	// Authentication goes here
 	// ...
 
 	// Set user as authenticated
-	session.Values["authenticated"] = true
-	session.Save(r, w)
+	session.Set("authenticated", true)
 }
 
-func logout(w http.ResponseWriter, r *http.Request) {
-	session, _ := store.Get(r, "cookie-name")
+func logout(ctx *iris.Context) {
+	session := ctx.Session()
 
 	// Revoke users authentication
-	session.Values["authenticated"] = false
-	session.Save(r, w)
+	session.Set("authenticated", false)
 }
 
 func main() {
-	http.HandleFunc("/secret", secret)
-	http.HandleFunc("/login", login)
-	http.HandleFunc("/logout", logout)
+	app := iris.New()
+	app.Adapt(httprouter.New())
 
-	http.ListenAndServe(":8080", nil)
+	sess := sessions.New(sessions.Config{Cookie: key})
+	app.Adapt(sess)
+
+	app.Get("/secret", secret)
+	app.Get("/login", login)
+	app.Get("/logout", logout)
+
+	app.Listen(":8080")
 }
-{{< / highlight >}}
-{{< highlight console >}}
+```
+```
 $ go run sessions.go
 
 $ curl -s http://localhost:8080/secret
 Forbidden
 
 $ curl -s -I http://localhost:8080/login
-Set-Cookie: cookie-name=MTQ4NzE5Mz...
+Set-Cookie: mysessionid=MTQ4NzE5Mz...
 
-$ curl -s --cookie "cookie-name=MTQ4NzE5Mz..." http://localhost:8080/secret
+$ curl -s --cookie "mysessionid=MTQ4NzE5Mz..." http://localhost:8080/secret
 The cake is a lie!
-{{< / highlight >}}
-
-
+```

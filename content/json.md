@@ -1,20 +1,19 @@
 +++
 weight = 6
 title = "JSON"
-description = "This example will show how to encode and decode JSON data using the encoding/json package in the Go programming language."
+description = "This example will show how to encode and decode JSON data in the Go programming language."
 +++
 
 # [Go Web Examples:](/) JSON
 
-This example will show how to encode and decode JSON data using the `encoding/json` package.
-{{< highlight go >}}
+This example will show how to encode and decode JSON data.
+```
 // json.go
 package main
 
 import (
-	"encoding/json"
-	"fmt"
-	"net/http"
+	"gopkg.in/kataras/iris.v6"
+	"gopkg.in/kataras/iris.v6/adaptors/httprouter"
 )
 
 type User struct {
@@ -24,27 +23,30 @@ type User struct {
 }
 
 func main() {
-	http.HandleFunc("/decode", func(w http.ResponseWriter, r *http.Request) {
-		var user User
-		json.NewDecoder(r.Body).Decode(&user)
+	app := iris.New()
+	app.Adapt(httprouter.New())
 
-		fmt.Fprintf(w, "%s %s is %d years old!", user.Firstname, user.Lastname, user.Age)
+	app.Post("/decode", func(ctx *iris.Context) {
+		var user User
+		ctx.ReadJSON(&user)
+
+		ctx.Writef("%s %s is %d years old!", user.Firstname, user.Lastname, user.Age)
 	})
 
-	http.HandleFunc("/encode", func(w http.ResponseWriter, r *http.Request) {
+	app.Get("/encode", func(ctx *iris.Context) {
 		peter := User{
 			Firstname: "John",
 			Lastname:  "Doe",
 			Age:       25,
 		}
 
-		json.NewEncoder(w).Encode(peter)
+		ctx.JSON(iris.StatusOK, peter)
 	})
 
-	http.ListenAndServe(":8080", nil)
+	app.Listen(":8080")
 }
-{{< / highlight >}}
-{{< highlight console >}}
+```
+```
 $ go run json.go
 
 $ curl -s -XPOST -d'{"firstname":"Donald","lastname":"Trump","age":70}' http://localhost:8080/decode
@@ -53,4 +55,4 @@ Donald Trump is 70 years old!
 $ curl -s http://localhost:8080/encode
 {"firstname":"John","lastname":"Doe","age":25}
 
-{{< / highlight >}}
+```

@@ -1,53 +1,50 @@
 +++
 weight = 3
-title = "Routes (using gorilla/mux)"
-description = "This example will show how to register routes using the popular gorilla/mux router in the Go programming language."
+title = "Routes (using gorillamux)"
+description = "This example will show how to register routes using the popular gorillamux router in the Go programming language."
 +++
 
-# [Go Web Examples:](/) Routes (using gorilla/mux)
+# [Go Web Examples:](/) Routes (using gorillamux)
 
-This example will show how to register routes using the popular <a target="_blank" href="https://github.com/gorilla/mux">gorilla/mux</a> router.
-It is compatible with the router from the standard `net/http` package but adds a few extra features like named url parameters and http method restrictions to remove some boilerplate code.
+This example will show how to register routes using the popular <a target="_blank" href="https://github.com/gorilla/mux">gorillamux</a> router.
 
-To use the library we will have to install it first like so:
 
-`$ go get github.com/gorilla/mux`
 
-From now on, every application we write will be able to make use of this library.
 
-{{< highlight go >}}
+```
 // routes.go
 package main
 
 import (
-	"fmt"
-	"net/http"
-
-	"github.com/gorilla/mux"
+	"gopkg.in/kataras/iris.v6"
+	"gopkg.in/kataras/iris.v6/adaptors/gorillamux"
 )
 
 func main() {
+  app := iris.New()
+	// Adapt the "httprouter", you can use "gorillamux" too.
+	app.Adapt(gorillamux.New())
+
 	userAges := map[string]int{
 		"Alice":  25,
 		"Bob":    30,
 		"Claire": 29,
 	}
 
-	r := mux.NewRouter()
-	r.HandleFunc("/users/{name}", func(w http.ResponseWriter, r *http.Request) {
-		vars := mux.Vars(r)
-		name := vars["name"]
+  // Equivalent with app.HandleFunc("GET", ...)
+	app.Get("/users/{name}", func(ctx *iris.Context) {
+		name := ctx.Param("name")
 		age := userAges[name]
 
-		fmt.Fprintf(w, "%s is %d years old!", name, age)
-	}).Methods("GET")
+		ctx.Writef("%s is %d years old!", name, age)
+	})
 
-	http.ListenAndServe(":8080", r)
+	app.Listen(":8080")
 }
-{{< / highlight >}}
-{{< highlight console >}}
+```
+```
 $ go run routes.go
 
 $ curl -s http://localhost:8080/users/Bob
 Bob is 30 years old!
-{{< / highlight >}}
+```

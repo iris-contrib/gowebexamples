@@ -8,16 +8,16 @@ description = "This example will show how to create basic logging middleware in 
 
 This example will show how to create basic logging middleware in Go.
 
-A middleware simply takes a `http.HandlerFunc` as one of its parameters, wraps it and returns a new `http.HandlerFunc` for the server to call.
+An `Iris` Middleware is just a chain of `iris.HandlerFunc` runs explicity by calling `context.Next()`. On each request route's handlers share the same `*Context`, so these handlers can share information or stop execution the execution of the next in the chain.(When `context.Next` is missing then the next handler doesn't run).
 
-{{< highlight go >}}
+
+```
 // basic-middleware.go
 package main
 
 import (
-	"fmt"
-	"log"
-	"net/http"
+	"gopkg.in/kataras/iris.v6"
+	"gopkg.in/kataras/iris.v6/adaptors/httprouter"
 )
 
 func logging(f http.HandlerFunc) http.HandlerFunc {
@@ -36,13 +36,17 @@ func bar(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
-	http.HandleFunc("/foo", logging(foo))
-	http.HandleFunc("/bar", logging(bar))
+	app := iris.New()
+	app.Adapt(iris.DevLogger())
+	app.Adapt(httprouter.New())
+
+	app.Get("/foo", logging(foo))
+	app.Get("/bar", logging(bar))
 
 	http.ListenAndServe(":8080", nil)
 }
-{{< / highlight >}}
-{{< highlight console >}}
+```
+```
 $ go run basic-middleware.go
 2017/02/10 23:59:34 /foo
 2017/02/10 23:59:35 /bar
@@ -51,4 +55,4 @@ $ go run basic-middleware.go
 $ curl -s http://localhost:8080/foo
 $ curl -s http://localhost:8080/bar
 $ curl -s http://localhost:8080/foo?bar
-{{< / highlight >}}
+```

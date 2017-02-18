@@ -7,83 +7,101 @@ description = "This example will show how to work with websockets in Go. We will
 # [Go Web Examples:](/) Websockets
 
 This example will show how to work with websockets in Go. We will build a simple server which echoes back everything we send to it.
-For this we have to `go get` the popular <a target="_blank" href="https://github.com/gorilla/websocket">gorilla/websocket</a> library like so:
+You don't need any third-party library except `adaptors/websocket`, but if you want you can use anything. Remember: Iris is fully compatible with the standard library.
 
-`$ go get github.com/gorilla/websocket`
+You can find more websocket examples by pressing [here](https://github.com/kataras/iris/tree/v6/adaptors/websocket/_examples).
 
-From now on, every application we write will be able to make use of this library.
-{{< highlight go >}}
+```
 // websockets.go
 package main
 
 import (
 	"fmt"
-	"net/http"
 
-	"github.com/gorilla/websocket"
+	"gopkg.in/kataras/iris.v6"
+	"gopkg.in/kataras/iris.v6/adaptors/httprouter"
+	"gopkg.in/kataras/iris.v6/adaptors/websocket"
 )
 
-var upgrader = websocket.Upgrader{
-	ReadBufferSize:  1024,
-	WriteBufferSize: 1024,
+const (
+	ReadBufferSize =  1024
+	WriteBufferSize = 1024
+)
+
+func handleConnection(c websocket.Connection){
+
+	// Read events from browser
+	c.On("chat", func(msg string) {
+
+		// Print the message to the console
+		fmt.Printf("%s sent: %s\n", c.Context().RemoteAddr(), msg)
+
+		// Write message back to browser
+		c.Emit("chat", msg)
+	})
+
 }
 
 func main() {
-	http.HandleFunc("/echo", func(w http.ResponseWriter, r *http.Request) {
-		conn, _ := upgrader.Upgrade(w, r, nil) // error ignored for sake of simplicity
+	app := iris.New()
+	app.Adapt(httprouter.New())
 
-		for {
-			// Read message from browser
-			msgType, msg, err := conn.ReadMessage()
-			if err != nil {
-				return
-			}
-
-			// Print the message to the console
-			fmt.Printf("%s sent: %s\n", conn.RemoteAddr(), string(msg))
-
-			// Write message back to browser
-			if err = conn.WriteMessage(msgType, msg); err != nil {
-				return
-			}
-		}
+	// create our echo websocket server
+	ws := websocket.New(websocket.Config{
+	  ReadBufferSize: 1024,
+		WriteBufferSize: 1024,
+		Endpoint: "/echo",
 	})
 
-	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		http.ServeFile(w, r, "websockets.html")
+	ws.OnConnection(handleConnection)
+
+	// Adapt the websocket server.
+	// you can adapt more than one of course.
+	app.Adapt(ws)
+
+	app.Get("/", func(ctx *iris.Context) {
+		ctx.ServeFile("websockets.html")
 	})
 
-	http.ListenAndServe(":8080", nil)
+	app.Listen(":8080")
 }
-{{< / highlight >}}
-{{< highlight html >}}
+```
+```
 <!-- websockets.html -->
 <input id="input" type="text" />
 <button onclick="send()">Send</button>
 <pre id="output"></pre>
+<script src="/iris-ws.js"></script>
 <script>
 	var input = document.getElementById("input");
 	var output = document.getElementById("output");
-	var socket = new WebSocket("ws://localhost:8080/echo");
 
-	socket.onopen = function () {
+	// Ws comes from the auto-served '/iris-ws.js'
+	var socket = new Ws("ws://localhost:8080/echo");
+	socket.OnConnect(function () {
 		output.innerHTML += "Status: Connected\n";
-	};
+	});
 
-	socket.onmessage = function (e) {
-		output.innerHTML += "Server: " + e.data + "\n";
-	};
+	socket.OnDisconnect(function () {
+		output.innerHTML += "Status: Disconnected\n";
+	});
+
+	// read events from the server
+	socket.On("chat", function (msg) {
+		output.innerHTML += "Server: " + msg + "\n";
+	});
 
 	function send() {
-		socket.send(input.value);
+		// send chat event data to the server
+		socket.Emit("chat", input.value);
 		input.value = "";
 	}
 </script>
-{{< / highlight >}}
-{{< highlight console >}}
+```
+```
 $ go run websockets.go
 [127.0.0.1]:53403 sent: Hello Go Web Examples, you're doing great!
-{{< / highlight >}}
+```
 <div class="demo">
 	<input type="text">
 	<button>Send</button>

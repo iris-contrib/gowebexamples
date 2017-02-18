@@ -1,37 +1,43 @@
 +++
 weight = 7
 title = "Static Files"
-description = "This example will show how to serve static files like CSS or JS from a specific directory using the http.FileServer in the Go programming language."
+description = "This example will show how to serve static files like CSS or JS from a specific directory using the StaticWeb in the Go programming language."
 +++
 
 # [Go Web Examples:](/) Static Files
 
 This example will show how to serve static files like CSSs, JavaScripts or images from a specific directory.
 
-{{< highlight go >}}
+```
 // static-files.go
 package main
 
-import "net/http"
+import (
+	"gopkg.in/kataras/iris.v6"
+	"gopkg.in/kataras/iris.v6/adaptors/httprouter"
+)
 
 func main() {
-	fs := http.FileServer(http.Dir("assets/"))
-	http.Handle("/static/", http.StripPrefix("/static/", fs))
+	app := iris.New()
+	app.Adapt(httprouter.New())
+	// first parameter is the request path
+	// second is the operating system directory
+	app.StaticWeb("/static", "./static")
 
-	http.ListenAndServe(":8080", nil)
+	app.Listen(":8080")
 }
-{{< / highlight >}}
-{{< highlight console >}}
+```
+```
 $ tree assets/
 assets/
 └── css
     └── styles.css
-{{< / highlight >}}
-{{< highlight console >}}
+```
+```
 $ go run static-files.go
 
 $ curl -s http://localhost:8080/static/css/styles.css
 body {
     background-color: black;
 }
-{{< / highlight >}}
+```
