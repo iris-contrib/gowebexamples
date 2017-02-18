@@ -16,6 +16,7 @@ import (
 	"gopkg.in/kataras/iris.v6/adaptors/httprouter"
 )
 
+// User bind struct
 type User struct {
 	Firstname string `json:"firstname"`
 	Lastname  string `json:"lastname"`
@@ -45,6 +46,7 @@ func main() {
 
 	app.Listen(":8080")
 }
+
 ```
 ```
 $ go run json.go

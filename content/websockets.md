@@ -23,12 +23,7 @@ import (
 	"gopkg.in/kataras/iris.v6/adaptors/websocket"
 )
 
-const (
-	ReadBufferSize =  1024
-	WriteBufferSize = 1024
-)
-
-func handleConnection(c websocket.Connection){
+func handleConnection(c websocket.Connection) {
 
 	// Read events from browser
 	c.On("chat", func(msg string) {
@@ -48,9 +43,9 @@ func main() {
 
 	// create our echo websocket server
 	ws := websocket.New(websocket.Config{
-	  ReadBufferSize: 1024,
+		ReadBufferSize:  1024,
 		WriteBufferSize: 1024,
-		Endpoint: "/echo",
+		Endpoint:        "/echo",
 	})
 
 	ws.OnConnection(handleConnection)
@@ -60,11 +55,12 @@ func main() {
 	app.Adapt(ws)
 
 	app.Get("/", func(ctx *iris.Context) {
-		ctx.ServeFile("websockets.html")
+		ctx.ServeFile("websockets.html", false) // second parameter: enable gzip?
 	})
 
 	app.Listen(":8080")
 }
+
 ```
 ```
 <!-- websockets.html -->

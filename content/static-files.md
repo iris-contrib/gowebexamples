@@ -22,10 +22,11 @@ func main() {
 	app.Adapt(httprouter.New())
 	// first parameter is the request path
 	// second is the operating system directory
-	app.StaticWeb("/static", "./static")
+	app.StaticWeb("/static", "./assets")
 
 	app.Listen(":8080")
 }
+
 ```
 ```
 $ tree assets/

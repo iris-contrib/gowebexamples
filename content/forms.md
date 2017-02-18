@@ -18,6 +18,7 @@ import (
 	"gopkg.in/kataras/iris.v6/adaptors/view"
 )
 
+// ContactDetails the information from user
 type ContactDetails struct {
 	Email   string
 	Subject string
@@ -33,10 +34,10 @@ func main() {
 
 	app.Get("/", func(ctx *iris.Context) {
 		ctx.Render("forms.html", nil)
-	}
+	})
 
 	// Equivalent with app.HandleFunc("POST", ...)
-	app.Post("/", func(ctx *iris.Context){
+	app.Post("/", func(ctx *iris.Context) {
 
 		details := ContactDetails{
 			Email:   ctx.FormValue("email"),
@@ -52,6 +53,7 @@ func main() {
 
 	app.Listen(":8080")
 }
+
 ```
 ```
 <!-- mytemplates/forms.html -->

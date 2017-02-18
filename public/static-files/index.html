@@ -65,10 +65,11 @@ func main() {
     app.Adapt(httprouter.New())
     // first parameter is the request path
     // second is the operating system directory
-    app.StaticWeb(&quot;/static&quot;, &quot;./static&quot;)
+    app.StaticWeb(&quot;/static&quot;, &quot;./assets&quot;)
 
     app.Listen(&quot;:8080&quot;)
 }
+
 </code></pre>
 
 <pre><code>$ tree assets/

@@ -18,7 +18,7 @@ import (
 )
 
 func main() {
-  app := iris.New()
+	app := iris.New()
 	app.Adapt(httprouter.New())
 
 	userAges := map[string]int{
@@ -27,7 +27,7 @@ func main() {
 		"Claire": 29,
 	}
 
-  // Equivalent with app.HandleFunc("GET", ...)
+	// Equivalent with app.HandleFunc("GET", ...)
 	app.Get("/users/:name", func(ctx *iris.Context) {
 		name := ctx.Param("name")
 		age := userAges[name]
@@ -37,6 +37,7 @@ func main() {
 
 	app.Listen(":8080")
 }
+
 ```
 ```
 $ go run routes.go

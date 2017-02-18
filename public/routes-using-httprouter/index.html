@@ -61,7 +61,7 @@ import (
 )
 
 func main() {
-  app := iris.New()
+    app := iris.New()
     app.Adapt(httprouter.New())
 
     userAges := map[string]int{
@@ -70,7 +70,7 @@ func main() {
         &quot;Claire&quot;: 29,
     }
 
-  // Equivalent with app.HandleFunc(&quot;GET&quot;, ...)
+    // Equivalent with app.HandleFunc(&quot;GET&quot;, ...)
     app.Get(&quot;/users/:name&quot;, func(ctx *iris.Context) {
         name := ctx.Param(&quot;name&quot;)
         age := userAges[name]
@@ -80,6 +80,7 @@ func main() {
 
     app.Listen(&quot;:8080&quot;)
 }
+
 </code></pre>
 
 <pre><code>$ go run routes.go
@@ -96,7 +97,7 @@ Bob is 30 years old!
 			
 			<a title="GopherBOOk" class="home" href="/">home</a>
 			
-			<a title="Routes (using gorillamux)" class="forward" href="http://gopherbook.iris-go.com/routes-using-gorilla-mux/">forward →</a>
+			<a title="Routes (using gorillamux)" class="forward" href="http://gopherbook.iris-go.com/routes-using-gorillamux/">forward →</a>
 			
 		
 		</div>

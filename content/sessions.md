@@ -29,7 +29,7 @@ var (
 func secret(ctx *iris.Context) {
 
 	// Check if user is authenticated
-	if auth, _ := ctx.Session().GetBoolean(authenticated); !auth {
+	if auth, _ := ctx.Session().GetBoolean("authenticated"); !auth {
 		ctx.EmitError(iris.StatusForbidden)
 		return
 	}
@@ -68,6 +68,7 @@ func main() {
 
 	app.Listen(":8080")
 }
+
 ```
 ```
 $ go run sessions.go
