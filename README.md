@@ -1,9 +1,9 @@
 # +1 new chapter every day throughout the February
 
 
-## Go Web Examples
+## GopherBOOk
 
-Go Web Examples provides easy to understand code snippets on how to get started with web development with the Go programming language using the  [Iris](https://github.com/kataras/iris) web framework. It is inspired by [Go Web By Example](https://gowebexamples.github.io), which contains simple concepts and code snippets for a new golang developer.
+GopherBOOk provides easy to understand code snippets on how to get started with web development with the Go programming language using the  [Iris](https://github.com/kataras/iris) web framework.
 
 
 ### Note

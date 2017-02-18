@@ -1,7 +1,7 @@
-baseUrl = "http://examples.iris-go.com/"
+baseUrl = "http://gopherbook.iris-go.com/"
 languageCode = "en-us"
-title = "Go Web Examples"
+title = "GopherBOOk"
 PygmentsCodeFences = true
 PygmentsStyle = "trac"
 [Params]
-description = "Iris Go Web Examples provides easy to understand code snippets on how to get started with web development in the Go programming language using Iris web framework."
+description = "GopherBOOk provides easy to understand code snippets on how to get started with web development in the Go programming language using Iris web framework."

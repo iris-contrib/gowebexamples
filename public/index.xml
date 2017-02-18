@@ -1,22 +1,22 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Go Web Examples</title>
-    <link>https://docs.iris-go.com/index.xml</link>
-    <description>Recent content on Go Web Examples</description>
+    <title>GopherBOOk</title>
+    <link>http://gopherbook.iris-go.com/index.xml</link>
+    <description>Recent content on GopherBOOk</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <atom:link href="https://docs.iris-go.com/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="http://gopherbook.iris-go.com/index.xml" rel="self" type="application/rss+xml" />
     
     <item>
       <title>Hello World</title>
-      <link>https://docs.iris-go.com/hello-world/</link>
+      <link>http://gopherbook.iris-go.com/hello-world/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
-      <guid>https://docs.iris-go.com/hello-world/</guid>
+      <guid>http://gopherbook.iris-go.com/hello-world/</guid>
       <description>
 
-&lt;h1 id=&#34;go-web-examples-hello-world&#34;&gt;&lt;a href=&#34;https://docs.iris-go.com/&#34;&gt;Go Web Examples:&lt;/a&gt; Hello World&lt;/h1&gt;
+&lt;h1 id=&#34;go-web-examples-hello-world&#34;&gt;&lt;a href=&#34;http://gopherbook.iris-go.com/&#34;&gt;Go Web Examples:&lt;/a&gt; Hello World&lt;/h1&gt;
 
 &lt;p&gt;This example will show how to start a webserver on port 8080 and print the classic &amp;ldquo;hello world&amp;rdquo; message.&lt;/p&gt;
 
@@ -60,13 +60,13 @@ hello world
     
     <item>
       <title>Routes (using httprouter)</title>
-      <link>https://docs.iris-go.com/routes-using-httprouter/</link>
+      <link>http://gopherbook.iris-go.com/routes-using-httprouter/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
-      <guid>https://docs.iris-go.com/routes-using-httprouter/</guid>
+      <guid>http://gopherbook.iris-go.com/routes-using-httprouter/</guid>
       <description>
 
-&lt;h1 id=&#34;go-web-examples-routes-using-httprouter&#34;&gt;&lt;a href=&#34;https://docs.iris-go.com/&#34;&gt;Go Web Examples:&lt;/a&gt; Routes (using httprouter)&lt;/h1&gt;
+&lt;h1 id=&#34;go-web-examples-routes-using-httprouter&#34;&gt;&lt;a href=&#34;http://gopherbook.iris-go.com/&#34;&gt;Go Web Examples:&lt;/a&gt; Routes (using httprouter)&lt;/h1&gt;
 
 &lt;p&gt;This example will show how to register routes using the popular &lt;a target=&#34;_blank&#34; href=&#34;https://github.com/julienschmidt/httprouter&#34;&gt;httprouter&lt;/a&gt; router.&lt;/p&gt;
 
@@ -110,13 +110,13 @@ Bob is 30 years old!
     
     <item>
       <title>Routes (using gorillamux)</title>
-      <link>https://docs.iris-go.com/routes-using-gorilla-mux/</link>
+      <link>http://gopherbook.iris-go.com/routes-using-gorilla-mux/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
-      <guid>https://docs.iris-go.com/routes-using-gorilla-mux/</guid>
+      <guid>http://gopherbook.iris-go.com/routes-using-gorilla-mux/</guid>
       <description>
 
-&lt;h1 id=&#34;go-web-examples-routes-using-gorillamux&#34;&gt;&lt;a href=&#34;https://docs.iris-go.com/&#34;&gt;Go Web Examples:&lt;/a&gt; Routes (using gorillamux)&lt;/h1&gt;
+&lt;h1 id=&#34;go-web-examples-routes-using-gorillamux&#34;&gt;&lt;a href=&#34;http://gopherbook.iris-go.com/&#34;&gt;Go Web Examples:&lt;/a&gt; Routes (using gorillamux)&lt;/h1&gt;
 
 &lt;p&gt;This example will show how to register routes using the popular &lt;a target=&#34;_blank&#34; href=&#34;https://github.com/gorilla/mux&#34;&gt;gorillamux&lt;/a&gt; router.&lt;/p&gt;
 
@@ -161,13 +161,13 @@ Bob is 30 years old!
     
     <item>
       <title>Templates</title>
-      <link>https://docs.iris-go.com/templates/</link>
+      <link>http://gopherbook.iris-go.com/templates/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
-      <guid>https://docs.iris-go.com/templates/</guid>
+      <guid>http://gopherbook.iris-go.com/templates/</guid>
       <description>
 
-&lt;h1 id=&#34;go-web-examples-templates&#34;&gt;&lt;a href=&#34;https://docs.iris-go.com/&#34;&gt;Go Web Examples:&lt;/a&gt; Templates&lt;/h1&gt;
+&lt;h1 id=&#34;go-web-examples-templates&#34;&gt;&lt;a href=&#34;http://gopherbook.iris-go.com/&#34;&gt;Go Web Examples:&lt;/a&gt; Templates&lt;/h1&gt;
 
 &lt;p&gt;This example will show how to render a simple list of TODO items into an html page using the &lt;code&gt;html/template view adaptor&lt;/code&gt;.&lt;/p&gt;
 
@@ -273,13 +273,13 @@ func main() {
     
     <item>
       <title>Forms</title>
-      <link>https://docs.iris-go.com/forms/</link>
+      <link>http://gopherbook.iris-go.com/forms/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
-      <guid>https://docs.iris-go.com/forms/</guid>
+      <guid>http://gopherbook.iris-go.com/forms/</guid>
       <description>
 
-&lt;h1 id=&#34;go-web-examples-forms&#34;&gt;&lt;a href=&#34;https://docs.iris-go.com/&#34;&gt;Go Web Examples:&lt;/a&gt; Forms&lt;/h1&gt;
+&lt;h1 id=&#34;go-web-examples-forms&#34;&gt;&lt;a href=&#34;http://gopherbook.iris-go.com/&#34;&gt;Go Web Examples:&lt;/a&gt; Forms&lt;/h1&gt;
 
 &lt;p&gt;This example will show how to simulate a contact form and parse the message into a struct.&lt;/p&gt;
 
@@ -365,13 +365,13 @@ func main() {
     
     <item>
       <title>JSON</title>
-      <link>https://docs.iris-go.com/json/</link>
+      <link>http://gopherbook.iris-go.com/json/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
-      <guid>https://docs.iris-go.com/json/</guid>
+      <guid>http://gopherbook.iris-go.com/json/</guid>
       <description>
 
-&lt;h1 id=&#34;go-web-examples-json&#34;&gt;&lt;a href=&#34;https://docs.iris-go.com/&#34;&gt;Go Web Examples:&lt;/a&gt; JSON&lt;/h1&gt;
+&lt;h1 id=&#34;go-web-examples-json&#34;&gt;&lt;a href=&#34;http://gopherbook.iris-go.com/&#34;&gt;Go Web Examples:&lt;/a&gt; JSON&lt;/h1&gt;
 
 &lt;p&gt;This example will show how to encode and decode JSON data.&lt;/p&gt;
 
@@ -428,13 +428,13 @@ $ curl -s http://localhost:8080/encode
     
     <item>
       <title>Static Files</title>
-      <link>https://docs.iris-go.com/static-files/</link>
+      <link>http://gopherbook.iris-go.com/static-files/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
-      <guid>https://docs.iris-go.com/static-files/</guid>
+      <guid>http://gopherbook.iris-go.com/static-files/</guid>
       <description>
 
-&lt;h1 id=&#34;go-web-examples-static-files&#34;&gt;&lt;a href=&#34;https://docs.iris-go.com/&#34;&gt;Go Web Examples:&lt;/a&gt; Static Files&lt;/h1&gt;
+&lt;h1 id=&#34;go-web-examples-static-files&#34;&gt;&lt;a href=&#34;http://gopherbook.iris-go.com/&#34;&gt;Go Web Examples:&lt;/a&gt; Static Files&lt;/h1&gt;
 
 &lt;p&gt;This example will show how to serve static files like CSSs, JavaScripts or images from a specific directory.&lt;/p&gt;
 
@@ -475,13 +475,13 @@ body {
     
     <item>
       <title>Sessions</title>
-      <link>https://docs.iris-go.com/sessions/</link>
+      <link>http://gopherbook.iris-go.com/sessions/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
-      <guid>https://docs.iris-go.com/sessions/</guid>
+      <guid>http://gopherbook.iris-go.com/sessions/</guid>
       <description>
 
-&lt;h1 id=&#34;go-web-examples-sessions&#34;&gt;&lt;a href=&#34;https://docs.iris-go.com/&#34;&gt;Go Web Examples:&lt;/a&gt; Sessions&lt;/h1&gt;
+&lt;h1 id=&#34;go-web-examples-sessions&#34;&gt;&lt;a href=&#34;http://gopherbook.iris-go.com/&#34;&gt;Go Web Examples:&lt;/a&gt; Sessions&lt;/h1&gt;
 
 &lt;p&gt;This example will show how to store data from a session.&lt;/p&gt;
 
@@ -562,13 +562,13 @@ The cake is a lie!
     
     <item>
       <title>Password Hashing</title>
-      <link>https://docs.iris-go.com/password-hashing/</link>
+      <link>http://gopherbook.iris-go.com/password-hashing/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
-      <guid>https://docs.iris-go.com/password-hashing/</guid>
+      <guid>http://gopherbook.iris-go.com/password-hashing/</guid>
       <description>
 
-&lt;h1 id=&#34;go-web-examples-password-hashing&#34;&gt;&lt;a href=&#34;https://docs.iris-go.com/&#34;&gt;Go Web Examples:&lt;/a&gt; Password Hashing&lt;/h1&gt;
+&lt;h1 id=&#34;go-web-examples-password-hashing&#34;&gt;&lt;a href=&#34;http://gopherbook.iris-go.com/&#34;&gt;Go Web Examples:&lt;/a&gt; Password Hashing&lt;/h1&gt;
 
 &lt;p&gt;This example will show how to hash passwords using bcrypt.
 For this we have to &lt;code&gt;go get&lt;/code&gt; the golang bcrypt library like so:&lt;/p&gt;
@@ -619,13 +619,13 @@ Match:    true
     
     <item>
       <title>Websockets</title>
-      <link>https://docs.iris-go.com/websockets/</link>
+      <link>http://gopherbook.iris-go.com/websockets/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
-      <guid>https://docs.iris-go.com/websockets/</guid>
+      <guid>http://gopherbook.iris-go.com/websockets/</guid>
       <description>
 
-&lt;h1 id=&#34;go-web-examples-websockets&#34;&gt;&lt;a href=&#34;https://docs.iris-go.com/&#34;&gt;Go Web Examples:&lt;/a&gt; Websockets&lt;/h1&gt;
+&lt;h1 id=&#34;go-web-examples-websockets&#34;&gt;&lt;a href=&#34;http://gopherbook.iris-go.com/&#34;&gt;Go Web Examples:&lt;/a&gt; Websockets&lt;/h1&gt;
 
 &lt;p&gt;This example will show how to work with websockets in Go. We will build a simple server which echoes back everything we send to it.
 You don&amp;rsquo;t need any third-party library except &lt;code&gt;adaptors/websocket&lt;/code&gt;, but if you want you can use anything. Remember: Iris is fully compatible with the standard library.&lt;/p&gt;
