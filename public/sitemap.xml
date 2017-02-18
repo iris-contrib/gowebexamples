@@ -42,14 +42,6 @@
   </url>
   
   <url>
-    <loc>https://docs.iris-go.com/middleware/</loc>
-  </url>
-  
-  <url>
-    <loc>https://docs.iris-go.com/middleware-nethttp/</loc>
-  </url>
-  
-  <url>
     <loc>https://docs.iris-go.com/</loc>
     <priority>0</priority>
   </url>

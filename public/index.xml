@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Iris Go Web Examples</title>
+    <title>Go Web Examples</title>
     <link>https://docs.iris-go.com/index.xml</link>
-    <description>Recent content on Iris Go Web Examples</description>
+    <description>Recent content on Go Web Examples</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <atom:link href="https://docs.iris-go.com/index.xml" rel="self" type="application/rss+xml" />
@@ -19,6 +19,13 @@
 &lt;h1 id=&#34;go-web-examples-hello-world&#34;&gt;&lt;a href=&#34;https://docs.iris-go.com/&#34;&gt;Go Web Examples:&lt;/a&gt; Hello World&lt;/h1&gt;
 
 &lt;p&gt;This example will show how to start a webserver on port 8080 and print the classic &amp;ldquo;hello world&amp;rdquo; message.&lt;/p&gt;
+
+&lt;p&gt;For this we have to actually &lt;a target=&#34;_blank&#34; href=&#34;https://golang.org/doc/articles/go_command.html#tmp_3&#34;&gt;go get&lt;/a&gt; the popular &lt;a target=&#34;_blank&#34; href=&#34;https://github.com/kataras/iris&#34;&gt;kataras/iris&lt;/a&gt; library like so:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ go get gopkg.in/kataras/iris.v6
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;From now on, every application we write will be able to make use of this library!&lt;/p&gt;
 
 &lt;pre&gt;&lt;code&gt;// hello-world.go
 package main
@@ -722,191 +729,6 @@ func main() {
     &lt;pre&gt;Status: Connected
 Server: Hello Go Web Examples, you&#39;re doing great!&lt;/pre&gt;
 &lt;/div&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>Middleware (Basic)</title>
-      <link>https://docs.iris-go.com/middleware/</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      
-      <guid>https://docs.iris-go.com/middleware/</guid>
-      <description>
-
-&lt;h1 id=&#34;go-web-examples-middleware-basic&#34;&gt;&lt;a href=&#34;https://docs.iris-go.com/&#34;&gt;Go Web Examples:&lt;/a&gt; Middleware (Basic)&lt;/h1&gt;
-
-&lt;p&gt;This example will show how to create basic logging middleware in Go.&lt;/p&gt;
-
-&lt;p&gt;An &lt;code&gt;Iris&lt;/code&gt; Middleware is just a chain of &lt;code&gt;iris.HandlerFunc&lt;/code&gt; runs explicity by calling &lt;code&gt;context.Next()&lt;/code&gt;. On each request route&amp;rsquo;s handlers share the same &lt;code&gt;*Context&lt;/code&gt;, so these handlers can share information or stop execution the execution of the next in the chain.(When &lt;code&gt;context.Next&lt;/code&gt; is missing then the next handler doesn&amp;rsquo;t run).&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;// basic-middleware.go
-package main
-
-import (
-    &amp;quot;gopkg.in/kataras/iris.v6&amp;quot;
-    &amp;quot;gopkg.in/kataras/iris.v6/adaptors/httprouter&amp;quot;
-)
-
-func logging(f http.HandlerFunc) http.HandlerFunc {
-    return func(w http.ResponseWriter, r *http.Request) {
-        log.Println(r.URL.Path)
-        f(w, r)
-    }
-}
-
-func foo(w http.ResponseWriter, r *http.Request) {
-    fmt.Fprintln(w, &amp;quot;foo&amp;quot;)
-}
-
-func bar(w http.ResponseWriter, r *http.Request) {
-    fmt.Fprintln(w, &amp;quot;bar&amp;quot;)
-}
-
-func main() {
-    app := iris.New()
-    app.Adapt(iris.DevLogger())
-    app.Adapt(httprouter.New())
-
-    app.Get(&amp;quot;/foo&amp;quot;, logging(foo))
-    app.Get(&amp;quot;/bar&amp;quot;, logging(bar))
-
-    http.ListenAndServe(&amp;quot;:8080&amp;quot;, nil)
-}
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;pre&gt;&lt;code&gt;$ go run basic-middleware.go
-2017/02/10 23:59:34 /foo
-2017/02/10 23:59:35 /bar
-2017/02/10 23:59:36 /foo?bar
-
-$ curl -s http://localhost:8080/foo
-$ curl -s http://localhost:8080/bar
-$ curl -s http://localhost:8080/foo?bar
-&lt;/code&gt;&lt;/pre&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>Middleware (Net/http)</title>
-      <link>https://docs.iris-go.com/middleware-nethttp/</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      
-      <guid>https://docs.iris-go.com/middleware-nethttp/</guid>
-      <description>
-
-&lt;h1 id=&#34;go-web-examples-middleware-advanced&#34;&gt;&lt;a href=&#34;https://docs.iris-go.com/&#34;&gt;Go Web Examples:&lt;/a&gt; Middleware (Advanced)&lt;/h1&gt;
-
-&lt;p&gt;Most of the middleware that you will use are not created only for Iris, they are created for the standard &lt;code&gt;net/http&lt;/code&gt; package.
-So how Iris can play with them? Iris plays nice with &lt;code&gt;net/http&lt;/code&gt; package as a low-level acccess framework. You can wrap a &lt;code&gt;http.Handler&lt;/code&gt; or a  middleware of form &lt;code&gt;func(http.ResponseWriter, *http.Request, next http.HandlerFunc)&lt;/code&gt; with the &lt;code&gt;iris.ToHandler(h)&lt;/code&gt; and you will receive an &lt;code&gt;iris.HandlerFunc&lt;/code&gt; which you can use to the entire framework!&lt;/p&gt;
-
-&lt;p&gt;&lt;br /&gt;
-This snippet explains in detail how a new middleware is created. In the full example below, we reduce this version by some boilerplate code.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;func createNewMiddleware() Middleware {
-
-    // Create a new Middleware
-    middleware := func(next http.HandlerFunc) http.HandlerFunc {
-
-        // Define the http.HandlerFunc which is called by the server eventually
-        handler := func(w http.ResponseWriter, r *http.Request) {
-
-            // ... do middleware things
-
-            // Call the next middleware/handler in chain
-            next(w, r)
-        }
-
-        // Return newly created handler
-        return handler
-    }
-
-    // Return newly created middleware
-    return middleware
-}
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;&lt;br /&gt;
-This is the full example:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;// advanced-middleware.go
-package main
-
-import (
-    &amp;quot;fmt&amp;quot;
-    &amp;quot;log&amp;quot;
-    &amp;quot;net/http&amp;quot;
-    &amp;quot;time&amp;quot;
-)
-
-type Middleware func(http.HandlerFunc) http.HandlerFunc
-
-// Logging logs all requests with its path and the time it took to process
-func Logging() Middleware {
-
-    // Create a new Middleware
-    return func(f http.HandlerFunc) http.HandlerFunc {
-
-        // Define the http.HandlerFunc
-        return func(w http.ResponseWriter, r *http.Request) {
-
-            // Do middleware things
-            start := time.Now()
-            defer func() { log.Println(r.URL.Path, time.Since(start)) }()
-
-            // Call the next middleware/handler in chain
-            f(w, r)
-        }
-    }
-}
-
-// Method ensures that only a url can me requested with a specific method, else returns a 400 Bad Request
-func Method(m string) Middleware {
-
-    // Create a new Middleware
-    return func(f http.HandlerFunc) http.HandlerFunc {
-
-        // Define the http.HandlerFunc
-        return func(w http.ResponseWriter, r *http.Request) {
-
-            // Do middleware things
-            if r.Method != m {
-                http.Error(w, http.StatusText(http.StatusBadRequest), http.StatusBadRequest)
-                return
-            }
-
-            // Call the next middleware/handler in chain
-            f(w, r)
-        }
-    }
-}
-
-// Chain applies middlewares to a http.HandlerFunc
-func Chain(f http.HandlerFunc, middlewares ...Middleware) http.HandlerFunc {
-    for _, m := range middlewares {
-        f = m(f)
-    }
-    return f
-}
-
-func Hello(w http.ResponseWriter, r *http.Request) {
-    fmt.Fprintln(w, &amp;quot;hello world&amp;quot;)
-}
-
-func main() {
-    http.HandleFunc(&amp;quot;/&amp;quot;, Chain(Hello, Method(&amp;quot;GET&amp;quot;), Logging()))
-    http.ListenAndServe(&amp;quot;:8080&amp;quot;, nil)
-}
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;pre&gt;&lt;code&gt;$ go run advanced-middleware.go
-2017/02/11 00:34:53 / 0s
-
-$ curl -s http://localhost:8080/
-hello world
-
-$ curl -s -XPOST http://localhost:8080/
-Bad Request
-&lt;/code&gt;&lt;/pre&gt;
 </description>
     </item>
     

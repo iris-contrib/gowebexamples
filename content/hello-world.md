@@ -8,6 +8,12 @@ description = "This example will show how to start a webserver on port 8080 and 
 
 This example will show how to start a webserver on port 8080 and print the classic "hello world" message.
 
+For this we have to actually <a target="_blank" href="https://golang.org/doc/articles/go_command.html#tmp_3">go get</a> the popular <a target="_blank" href="https://github.com/kataras/iris">kataras/iris</a> library like so:
+```
+$ go get gopkg.in/kataras/iris.v6
+```
+From now on, every application we write will be able to make use of this library!
+
 ```
 // hello-world.go
 package main

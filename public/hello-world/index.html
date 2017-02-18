@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 	
-		<title>Iris Go Web Examples: Hello World</title>
+		<title>Go Web Examples: Hello World</title>
 	
 	<meta charset="utf-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
@@ -52,6 +52,13 @@
 
 <p>This example will show how to start a webserver on port 8080 and print the classic &ldquo;hello world&rdquo; message.</p>
 
+<p>For this we have to actually <a target="_blank" href="https://golang.org/doc/articles/go_command.html#tmp_3">go get</a> the popular <a target="_blank" href="https://github.com/kataras/iris">kataras/iris</a> library like so:</p>
+
+<pre><code>$ go get gopkg.in/kataras/iris.v6
+</code></pre>
+
+<p>From now on, every application we write will be able to make use of this library!</p>
+
 <pre><code>// hello-world.go
 package main
 
@@ -85,7 +92,7 @@ hello world
 		<div class="links">
 		
 			
-			<a title="Iris Go Web Examples" class="home" href="/">home</a>
+			<a title="Go Web Examples" class="home" href="/">home</a>
 			
 			<a title="Routes (using httprouter)" class="forward" href="https://docs.iris-go.com/routes-using-httprouter/">forward →</a>
 			

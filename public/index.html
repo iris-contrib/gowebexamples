@@ -3,11 +3,11 @@
 <head>
 	<meta name="generator" content="Hugo 0.18.1" />
 	
-		<title>Iris Go Web Examples</title>
+		<title>Go Web Examples</title>
 	
 	<meta charset="utf-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
-	<meta name="description" content="Iris Go Web Examples provides easy to understand code snippets on how to get started with web development in the Go programming language and Iris web framework." />
+	<meta name="description" content="Iris Go Web Examples provides easy to understand code snippets on how to get started with web development in the Go programming language using Iris web framework." />
 	<link rel="alternate" type="application/rss+xml" href="/index.xml" />
 	<link rel="canonical" href="https://docs.iris-go.com/">
 	<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
@@ -47,14 +47,17 @@
 <body>
 <div class="container">
 
-<h1><a href="/">Iris Go Web Examples</a></h1>
+<h1><a href="/">Go Web Examples</a></h1>
 <p>
 	<a target="_blank" href="https://golang.org/">Go</a> is a <a target="_blank" href="http://www.tiobe.com/tiobe-index/">rapidly growing</a> open source programming language designed for building simple, fast, and reliable software.
 	Take a look <a target="_blank" href="https://github.com/golang/go/wiki/GoUsers">here</a> which great companies use Go to power their services.
 </p>
 <p>
-	<i>Go Web Examples</i> provides easy to understand code snippets on how to do web development in the Go programming language and is inspired by <a target="_blank" href="https://gobyexample.com/"><i>Go By Example</i></a>, which has a great introduction into the fundamentals of this language. Check out the <a href="/hello-world/">first example</a> on how to create a classical "hello world" web application.
+	<i>Iris Go Web Examples</i>
+	  provides easy to understand code snippets on how to get started with web development in the Go programming language using Iris web framework.
+	  Check out the <a href="/hello-world/">first example</a> on how to create a classical "hello world" web application.
 </p>
+
 <p>&nbsp;</p>
 <p>
 	
@@ -78,11 +81,11 @@
 	
 	<a href="/websockets/">Websockets</a><br />
 	
-	<a href="/middleware/">Middleware (Basic)</a><br />
-	
-	<a href="/middleware-nethttp/">Middleware (Net/http)</a><br />
-	
 </p>
+<p>
+	<h3 id="fav" style="cursor:pointer !important;"> +1 new chapter every day throughout the February</h3>
+</p>
+
 	<div class="footer">
 		<div class="links">
 		
@@ -94,3 +97,21 @@
 </body>
 </html>
 
+
+<script src="http://code.jquery.com/jquery-1.11.2.min.js" type="text/javascript"></script>
+<script type="text/javascript">
+    $(function() {
+        $('#fav').click(function() {
+            if (window.sidebar && window.sidebar.addPanel) { 
+                window.sidebar.addPanel(document.title,window.location.href,'');
+            } else if(window.external && ('AddFavorite' in window.external)) { 
+                window.external.AddFavorite(location.href,document.title);
+            } else if(window.opera && window.print) { 
+                this.title=document.title;
+                return true;
+            } else { 
+                alert('Press ' + (navigator.userAgent.toLowerCase().indexOf('mac') != - 1 ? 'Command/Cmd' : 'CTRL') + ' + D to bookmark this page.');
+            }
+        });
+    });
+</script>
