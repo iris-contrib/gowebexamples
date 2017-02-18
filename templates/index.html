@@ -93,36 +93,38 @@ import (
     &quot;gopkg.in/kataras/iris.v6/adaptors/view&quot;
 )
 
+// Todo bind struct
 type Todo struct {
     Task string
     Done bool
 }
 
 func main() {
-  // Configuration is optional
-  app := iris.New(iris.Configuration{Gzip: false, Charset: &quot;UTF-8&quot;})
+    // Configuration is optional
+    app := iris.New(iris.Configuration{Gzip: false, Charset: &quot;UTF-8&quot;})
 
-  // Adapt a logger which will print all errors to os.Stdout
-  app.Adapt(iris.DevLogger())
+    // Adapt a logger which will print all errors to os.Stdout
+    app.Adapt(iris.DevLogger())
 
-  // Adapt the httprouter (we will use that on all examples)
-  app.Adapt(httprouter.New())
+    // Adapt the httprouter (we will use that on all examples)
+    app.Adapt(httprouter.New())
 
     // Parse all files inside `./mytemplates` directory ending with `.html`
     app.Adapt(view.HTML(&quot;./mytemplates&quot;, &quot;.html&quot;))
 
     todos := []Todo{
         {&quot;Learn Go&quot;, true},
-        {&quot;Read Go Web Examples&quot;, true},
+        {&quot;Read GopherBOOk&quot;, true},
         {&quot;Create a web app in Go&quot;, false},
     }
 
     app.Get(&quot;/&quot;, func(ctx *iris.Context) {
-      ctx.Render(&quot;todos.html&quot;, struct{ Todos []Todo }{todos})
+        ctx.Render(&quot;todos.html&quot;, struct{ Todos []Todo }{todos})
     })
 
     app.Listen(&quot;:8080&quot;)
 }
+
 </code></pre>
 
 <pre><code>&lt;!-- mytemplates/todos.html --&gt;
@@ -154,7 +156,7 @@ func main() {
 		<div class="links">
 		
 			
-			<a title="Routes (using gorillamux)" class="back" href="http://gopherbook.iris-go.com/routes-using-gorilla-mux/">← back</a>
+			<a title="Routes (using gorillamux)" class="back" href="http://gopherbook.iris-go.com/routes-using-gorillamux/">← back</a>
 			
 			<a title="GopherBOOk" class="home" href="/">home</a>
 			

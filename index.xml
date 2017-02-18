@@ -36,7 +36,7 @@ import (
 )
 
 func main() {
-  app := iris.New()
+    app := iris.New()
     // Adapt the &amp;quot;httprouter&amp;quot;, faster,
     // but it has limits on named path parameters&#39; validation,
     // you can adapt &amp;quot;gorillamux&amp;quot; if you need regexp path validation!
@@ -79,7 +79,7 @@ import (
 )
 
 func main() {
-  app := iris.New()
+    app := iris.New()
     app.Adapt(httprouter.New())
 
     userAges := map[string]int{
@@ -88,7 +88,7 @@ func main() {
         &amp;quot;Claire&amp;quot;: 29,
     }
 
-  // Equivalent with app.HandleFunc(&amp;quot;GET&amp;quot;, ...)
+    // Equivalent with app.HandleFunc(&amp;quot;GET&amp;quot;, ...)
     app.Get(&amp;quot;/users/:name&amp;quot;, func(ctx *iris.Context) {
         name := ctx.Param(&amp;quot;name&amp;quot;)
         age := userAges[name]
@@ -98,6 +98,7 @@ func main() {
 
     app.Listen(&amp;quot;:8080&amp;quot;)
 }
+
 &lt;/code&gt;&lt;/pre&gt;
 
 &lt;pre&gt;&lt;code&gt;$ go run routes.go
@@ -110,10 +111,10 @@ Bob is 30 years old!
     
     <item>
       <title>Routes (using gorillamux)</title>
-      <link>http://gopherbook.iris-go.com/routes-using-gorilla-mux/</link>
+      <link>http://gopherbook.iris-go.com/routes-using-gorillamux/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
-      <guid>http://gopherbook.iris-go.com/routes-using-gorilla-mux/</guid>
+      <guid>http://gopherbook.iris-go.com/routes-using-gorillamux/</guid>
       <description>
 
 &lt;h1 id=&#34;go-web-examples-routes-using-gorillamux&#34;&gt;&lt;a href=&#34;http://gopherbook.iris-go.com/&#34;&gt;Go Web Examples:&lt;/a&gt; Routes (using gorillamux)&lt;/h1&gt;
@@ -129,7 +130,7 @@ import (
 )
 
 func main() {
-  app := iris.New()
+    app := iris.New()
     // Adapt the &amp;quot;httprouter&amp;quot;, you can use &amp;quot;gorillamux&amp;quot; too.
     app.Adapt(gorillamux.New())
 
@@ -139,7 +140,7 @@ func main() {
         &amp;quot;Claire&amp;quot;: 29,
     }
 
-  // Equivalent with app.HandleFunc(&amp;quot;GET&amp;quot;, ...)
+    // Equivalent with app.HandleFunc(&amp;quot;GET&amp;quot;, ...)
     app.Get(&amp;quot;/users/{name}&amp;quot;, func(ctx *iris.Context) {
         name := ctx.Param(&amp;quot;name&amp;quot;)
         age := userAges[name]
@@ -149,6 +150,7 @@ func main() {
 
     app.Listen(&amp;quot;:8080&amp;quot;)
 }
+
 &lt;/code&gt;&lt;/pre&gt;
 
 &lt;pre&gt;&lt;code&gt;$ go run routes.go
@@ -212,36 +214,38 @@ import (
     &amp;quot;gopkg.in/kataras/iris.v6/adaptors/view&amp;quot;
 )
 
+// Todo bind struct
 type Todo struct {
     Task string
     Done bool
 }
 
 func main() {
-  // Configuration is optional
-  app := iris.New(iris.Configuration{Gzip: false, Charset: &amp;quot;UTF-8&amp;quot;})
+    // Configuration is optional
+    app := iris.New(iris.Configuration{Gzip: false, Charset: &amp;quot;UTF-8&amp;quot;})
 
-  // Adapt a logger which will print all errors to os.Stdout
-  app.Adapt(iris.DevLogger())
+    // Adapt a logger which will print all errors to os.Stdout
+    app.Adapt(iris.DevLogger())
 
-  // Adapt the httprouter (we will use that on all examples)
-  app.Adapt(httprouter.New())
+    // Adapt the httprouter (we will use that on all examples)
+    app.Adapt(httprouter.New())
 
     // Parse all files inside `./mytemplates` directory ending with `.html`
     app.Adapt(view.HTML(&amp;quot;./mytemplates&amp;quot;, &amp;quot;.html&amp;quot;))
 
     todos := []Todo{
         {&amp;quot;Learn Go&amp;quot;, true},
-        {&amp;quot;Read Go Web Examples&amp;quot;, true},
+        {&amp;quot;Read GopherBOOk&amp;quot;, true},
         {&amp;quot;Create a web app in Go&amp;quot;, false},
     }
 
     app.Get(&amp;quot;/&amp;quot;, func(ctx *iris.Context) {
-      ctx.Render(&amp;quot;todos.html&amp;quot;, struct{ Todos []Todo }{todos})
+        ctx.Render(&amp;quot;todos.html&amp;quot;, struct{ Todos []Todo }{todos})
     })
 
     app.Listen(&amp;quot;:8080&amp;quot;)
 }
+
 &lt;/code&gt;&lt;/pre&gt;
 
 &lt;pre&gt;&lt;code&gt;&amp;lt;!-- mytemplates/todos.html --&amp;gt;
@@ -292,6 +296,7 @@ import (
     &amp;quot;gopkg.in/kataras/iris.v6/adaptors/view&amp;quot;
 )
 
+// ContactDetails the information from user
 type ContactDetails struct {
     Email   string
     Subject string
@@ -307,10 +312,10 @@ func main() {
 
     app.Get(&amp;quot;/&amp;quot;, func(ctx *iris.Context) {
         ctx.Render(&amp;quot;forms.html&amp;quot;, nil)
-    }
+    })
 
     // Equivalent with app.HandleFunc(&amp;quot;POST&amp;quot;, ...)
-    app.Post(&amp;quot;/&amp;quot;, func(ctx *iris.Context){
+    app.Post(&amp;quot;/&amp;quot;, func(ctx *iris.Context) {
 
         details := ContactDetails{
             Email:   ctx.FormValue(&amp;quot;email&amp;quot;),
@@ -326,6 +331,7 @@ func main() {
 
     app.Listen(&amp;quot;:8080&amp;quot;)
 }
+
 &lt;/code&gt;&lt;/pre&gt;
 
 &lt;pre&gt;&lt;code&gt;&amp;lt;!-- mytemplates/forms.html --&amp;gt;
@@ -383,6 +389,7 @@ import (
     &amp;quot;gopkg.in/kataras/iris.v6/adaptors/httprouter&amp;quot;
 )
 
+// User bind struct
 type User struct {
     Firstname string `json:&amp;quot;firstname&amp;quot;`
     Lastname  string `json:&amp;quot;lastname&amp;quot;`
@@ -412,6 +419,7 @@ func main() {
 
     app.Listen(&amp;quot;:8080&amp;quot;)
 }
+
 &lt;/code&gt;&lt;/pre&gt;
 
 &lt;pre&gt;&lt;code&gt;$ go run json.go
@@ -451,10 +459,11 @@ func main() {
     app.Adapt(httprouter.New())
     // first parameter is the request path
     // second is the operating system directory
-    app.StaticWeb(&amp;quot;/static&amp;quot;, &amp;quot;./static&amp;quot;)
+    app.StaticWeb(&amp;quot;/static&amp;quot;, &amp;quot;./assets&amp;quot;)
 
     app.Listen(&amp;quot;:8080&amp;quot;)
 }
+
 &lt;/code&gt;&lt;/pre&gt;
 
 &lt;pre&gt;&lt;code&gt;$ tree assets/
@@ -505,7 +514,7 @@ var (
 func secret(ctx *iris.Context) {
 
     // Check if user is authenticated
-    if auth, _ := ctx.Session().GetBoolean(authenticated); !auth {
+    if auth, _ := ctx.Session().GetBoolean(&amp;quot;authenticated&amp;quot;); !auth {
         ctx.EmitError(iris.StatusForbidden)
         return
     }
@@ -544,6 +553,7 @@ func main() {
 
     app.Listen(&amp;quot;:8080&amp;quot;)
 }
+
 &lt;/code&gt;&lt;/pre&gt;
 
 &lt;pre&gt;&lt;code&gt;$ go run sessions.go
@@ -607,6 +617,7 @@ func main() {
     fmt.Println(&amp;quot;Match:   &amp;quot;, match)
 }
 
+
 &lt;/code&gt;&lt;/pre&gt;
 
 &lt;pre&gt;&lt;code&gt;$ go run passwords.go
@@ -643,12 +654,7 @@ import (
     &amp;quot;gopkg.in/kataras/iris.v6/adaptors/websocket&amp;quot;
 )
 
-const (
-    ReadBufferSize =  1024
-    WriteBufferSize = 1024
-)
-
-func handleConnection(c websocket.Connection){
+func handleConnection(c websocket.Connection) {
 
     // Read events from browser
     c.On(&amp;quot;chat&amp;quot;, func(msg string) {
@@ -668,9 +674,9 @@ func main() {
 
     // create our echo websocket server
     ws := websocket.New(websocket.Config{
-      ReadBufferSize: 1024,
+        ReadBufferSize:  1024,
         WriteBufferSize: 1024,
-        Endpoint: &amp;quot;/echo&amp;quot;,
+        Endpoint:        &amp;quot;/echo&amp;quot;,
     })
 
     ws.OnConnection(handleConnection)
@@ -680,11 +686,12 @@ func main() {
     app.Adapt(ws)
 
     app.Get(&amp;quot;/&amp;quot;, func(ctx *iris.Context) {
-        ctx.ServeFile(&amp;quot;websockets.html&amp;quot;)
+        ctx.ServeFile(&amp;quot;websockets.html&amp;quot;, false) // second parameter: enable gzip?
     })
 
     app.Listen(&amp;quot;:8080&amp;quot;)
 }
+
 &lt;/code&gt;&lt;/pre&gt;
 
 &lt;pre&gt;&lt;code&gt;&amp;lt;!-- websockets.html --&amp;gt;
