@@ -317,12 +317,16 @@ func main() {
     // Equivalent with app.HandleFunc(&amp;quot;POST&amp;quot;, ...)
     app.Post(&amp;quot;/&amp;quot;, func(ctx *iris.Context) {
 
-        details := ContactDetails{
-            Email:   ctx.FormValue(&amp;quot;email&amp;quot;),
-            Subject: ctx.FormValue(&amp;quot;subject&amp;quot;),
-            Message: ctx.FormValue(&amp;quot;message&amp;quot;),
-        }
+        // details := ContactDetails{
+        //  Email:   ctx.FormValue(&amp;quot;email&amp;quot;),
+        //  Subject: ctx.FormValue(&amp;quot;subject&amp;quot;),
+        //  Message: ctx.FormValue(&amp;quot;message&amp;quot;),
+        // }
 
+        // or simply:
+        var details ContactDetails
+        ctx.ReadForm(&amp;amp;details)
+        
         // do something with details
         _ = details
 
@@ -574,7 +578,7 @@ uploads/
 └──
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;pre&gt;&lt;code&gt;$ go run static-files.go
+&lt;pre&gt;&lt;code&gt;$ go run upload-files.go
 &lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;&lt;html&gt;
@@ -589,6 +593,60 @@ uploads/
     &lt;/form&gt;
 &lt;/body&gt;
 &lt;/html&gt;&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Favicon</title>
+      <link>http://gopherbook.iris-go.com/favicon/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>http://gopherbook.iris-go.com/favicon/</guid>
+      <description>
+
+&lt;h1 id=&#34;go-web-examples-favicon&#34;&gt;&lt;a href=&#34;http://gopherbook.iris-go.com/&#34;&gt;Go Web Examples:&lt;/a&gt; Favicon&lt;/h1&gt;
+
+&lt;p&gt;This example will show how to serve a favicon for your page.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;// favicon.go
+package main
+
+import (
+    &amp;quot;gopkg.in/kataras/iris.v6&amp;quot;
+    &amp;quot;gopkg.in/kataras/iris.v6/adaptors/httprouter&amp;quot;
+)
+
+func main() {
+    app := iris.New()
+    app.Adapt(httprouter.New())
+    // This will serve the ./static/favicons/iris_favicon_32_32.ico to: localhost:8080/favicon.ico
+    app.Favicon(&amp;quot;./static/favicons/iris_favicon_32_32.ico&amp;quot;)
+
+    // app.Favicon(&amp;quot;./static/favicons/iris_favicon_32_32.ico&amp;quot;, &amp;quot;/favicon_32_32.ico&amp;quot;)
+    // This will serve the ./static/favicons/iris_favicon_32_32.ico to: localhost:8080/favicon_32_32.ico
+
+    app.Get(&amp;quot;/&amp;quot;, func(ctx *iris.Context) {
+        ctx.HTML(iris.StatusOK, `You should see the favicon now at the side of your browser,
+      if not, please refresh or clear the browser&#39;s cache.`)
+    })
+
+    app.Listen(&amp;quot;:8080&amp;quot;)
+}
+
+
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;$ tree ./
+favicon.go
+static/
+└── favicons
+    └── iris_favicon_32_32.ico&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;$ go run favicon.go
+```&lt;/p&gt;
 </description>
     </item>
     
