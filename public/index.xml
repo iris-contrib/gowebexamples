@@ -483,6 +483,174 @@ body {
     </item>
     
     <item>
+      <title>Upload Files</title>
+      <link>http://gopherbook.iris-go.com/upload-files/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>http://gopherbook.iris-go.com/upload-files/</guid>
+      <description>
+
+&lt;h1 id=&#34;go-web-examples-upload-files&#34;&gt;&lt;a href=&#34;http://gopherbook.iris-go.com/&#34;&gt;Go Web Examples:&lt;/a&gt; Upload Files&lt;/h1&gt;
+
+&lt;p&gt;This example will show how to upload files to a specific directory.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;// upload-files.go
+package main
+
+import (
+    &amp;quot;crypto/md5&amp;quot;
+    &amp;quot;fmt&amp;quot;
+    &amp;quot;io&amp;quot;
+    &amp;quot;os&amp;quot;
+    &amp;quot;strconv&amp;quot;
+    &amp;quot;time&amp;quot;
+
+    &amp;quot;gopkg.in/kataras/iris.v6&amp;quot;
+    &amp;quot;gopkg.in/kataras/iris.v6/adaptors/httprouter&amp;quot;
+    &amp;quot;gopkg.in/kataras/iris.v6/adaptors/view&amp;quot;
+)
+
+func main() {
+    app := iris.New()
+    app.Adapt(iris.DevLogger())
+    app.Adapt(httprouter.New())
+    app.Adapt(view.HTML(&amp;quot;./templates&amp;quot;, &amp;quot;.html&amp;quot;))
+
+    // Serve the form.html to the user
+    app.Get(&amp;quot;/upload&amp;quot;, func(ctx *iris.Context) {
+        //create a token (optionally)
+
+        now := time.Now().Unix()
+        h := md5.New()
+        io.WriteString(h, strconv.FormatInt(now, 10))
+        token := fmt.Sprintf(&amp;quot;%x&amp;quot;, h.Sum(nil))
+        //render the form with the token for any use you like
+        ctx.Render(&amp;quot;upload_form.html&amp;quot;, token)
+    })
+
+    // Handle the post request from the upload_form.html to the server
+    app.Post(&amp;quot;/upload&amp;quot;, iris.LimitRequestBodySize(10&amp;lt;&amp;lt;20),
+        func(ctx *iris.Context) {
+            // or use ctx.SetMaxRequestBodySize(10 &amp;lt;&amp;lt; 20)
+            //to limit the uploaded file(s) size.
+
+            // Get the file from the request
+            file, info, err := ctx.FormFile(&amp;quot;uploadfile&amp;quot;)
+
+            if err != nil {
+                ctx.HTML(iris.StatusInternalServerError,
+                    &amp;quot;Error while uploading: &amp;lt;b&amp;gt;&amp;quot;+err.Error()+&amp;quot;&amp;lt;/b&amp;gt;&amp;quot;)
+                return
+            }
+
+            defer file.Close()
+            fname := info.Filename
+
+            // Create a file with the same name
+            // assuming that you have a folder named &#39;uploads&#39;
+            out, err := os.OpenFile(&amp;quot;./uploads/&amp;quot;+fname,
+                os.O_WRONLY|os.O_CREATE, 0666)
+
+            if err != nil {
+                ctx.HTML(iris.StatusInternalServerError,
+                    &amp;quot;Error while uploading: &amp;lt;b&amp;gt;&amp;quot;+err.Error()+&amp;quot;&amp;lt;/b&amp;gt;&amp;quot;)
+                return
+            }
+            defer out.Close()
+
+            io.Copy(out, file)
+        })
+
+    // start the server at 127.0.0.1:8080
+    app.Listen(&amp;quot;:8080&amp;quot;)
+}
+
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;pre&gt;&lt;code&gt;$ tree ./
+templates/
+└── upload_form.html
+uploads/
+└──
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;pre&gt;&lt;code&gt;$ go run static-files.go
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;html&gt;
+&lt;head&gt;
+&lt;title&gt;Upload file&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;form enctype=&#34;multipart/form-data&#34;
+        action=&#34;http://127.0.0.1:8080/upload&#34; method=&#34;post&#34;&gt;
+        &lt;input type=&#34;file&#34; name=&#34;uploadfile&#34; /&gt; &lt;input type=&#34;hidden&#34;
+            name=&#34;token&#34; value=&#34;{{.}}&#34; /&gt; &lt;input type=&#34;submit&#34; value=&#34;upload&#34; /&gt;
+    &lt;/form&gt;
+&lt;/body&gt;
+&lt;/html&gt;&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Password Hashing</title>
+      <link>http://gopherbook.iris-go.com/password-hashing/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>http://gopherbook.iris-go.com/password-hashing/</guid>
+      <description>
+
+&lt;h1 id=&#34;go-web-examples-password-hashing&#34;&gt;&lt;a href=&#34;http://gopherbook.iris-go.com/&#34;&gt;Go Web Examples:&lt;/a&gt; Password Hashing&lt;/h1&gt;
+
+&lt;p&gt;This example will show how to hash passwords using bcrypt.
+For this we have to &lt;code&gt;go get&lt;/code&gt; the golang bcrypt library like so:&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;$ go get golang.org/x/crypto/bcrypt&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;From now on, every application we write will be able to make use of this library.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;// passwords.go
+package main
+
+import (
+    &amp;quot;fmt&amp;quot;
+
+    &amp;quot;golang.org/x/crypto/bcrypt&amp;quot;
+)
+
+func HashPassword(password string) (string, error) {
+    bytes, err := bcrypt.GenerateFromPassword([]byte(password), 14)
+    return string(bytes), err
+}
+
+func CheckPasswordHash(password, hash string) bool {
+    err := bcrypt.CompareHashAndPassword([]byte(hash), []byte(password))
+    return err == nil
+}
+
+func main() {
+    password := &amp;quot;secret&amp;quot;
+    hash, _ := HashPassword(password) // ignore error for the sake of simplicity
+
+    fmt.Println(&amp;quot;Password:&amp;quot;, password)
+    fmt.Println(&amp;quot;Hash:    &amp;quot;, hash)
+
+    match := CheckPasswordHash(password, hash)
+    fmt.Println(&amp;quot;Match:   &amp;quot;, match)
+}
+
+
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;pre&gt;&lt;code&gt;$ go run passwords.go
+Password: secret
+Hash:     $2a$14$ajq8Q7fbtFRQvXpdCq7Jcuy.Rx1h/L4J60Otx.gyNLbAYctGMJ9tK
+Match:    true
+&lt;/code&gt;&lt;/pre&gt;
+</description>
+    </item>
+    
+    <item>
       <title>Sessions</title>
       <link>http://gopherbook.iris-go.com/sessions/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
@@ -566,64 +734,6 @@ Set-Cookie: mysessionid=MTQ4NzE5Mz...
 
 $ curl -s --cookie &amp;quot;mysessionid=MTQ4NzE5Mz...&amp;quot; http://localhost:8080/secret
 The cake is a lie!
-&lt;/code&gt;&lt;/pre&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>Password Hashing</title>
-      <link>http://gopherbook.iris-go.com/password-hashing/</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      
-      <guid>http://gopherbook.iris-go.com/password-hashing/</guid>
-      <description>
-
-&lt;h1 id=&#34;go-web-examples-password-hashing&#34;&gt;&lt;a href=&#34;http://gopherbook.iris-go.com/&#34;&gt;Go Web Examples:&lt;/a&gt; Password Hashing&lt;/h1&gt;
-
-&lt;p&gt;This example will show how to hash passwords using bcrypt.
-For this we have to &lt;code&gt;go get&lt;/code&gt; the golang bcrypt library like so:&lt;/p&gt;
-
-&lt;p&gt;&lt;code&gt;$ go get golang.org/x/crypto/bcrypt&lt;/code&gt;&lt;/p&gt;
-
-&lt;p&gt;From now on, every application we write will be able to make use of this library.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;// passwords.go
-package main
-
-import (
-    &amp;quot;fmt&amp;quot;
-
-    &amp;quot;golang.org/x/crypto/bcrypt&amp;quot;
-)
-
-func HashPassword(password string) (string, error) {
-    bytes, err := bcrypt.GenerateFromPassword([]byte(password), 14)
-    return string(bytes), err
-}
-
-func CheckPasswordHash(password, hash string) bool {
-    err := bcrypt.CompareHashAndPassword([]byte(hash), []byte(password))
-    return err == nil
-}
-
-func main() {
-    password := &amp;quot;secret&amp;quot;
-    hash, _ := HashPassword(password) // ignore error for the sake of simplicity
-
-    fmt.Println(&amp;quot;Password:&amp;quot;, password)
-    fmt.Println(&amp;quot;Hash:    &amp;quot;, hash)
-
-    match := CheckPasswordHash(password, hash)
-    fmt.Println(&amp;quot;Match:   &amp;quot;, match)
-}
-
-
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;pre&gt;&lt;code&gt;$ go run passwords.go
-Password: secret
-Hash:     $2a$14$ajq8Q7fbtFRQvXpdCq7Jcuy.Rx1h/L4J60Otx.gyNLbAYctGMJ9tK
-Match:    true
 &lt;/code&gt;&lt;/pre&gt;
 </description>
     </item>

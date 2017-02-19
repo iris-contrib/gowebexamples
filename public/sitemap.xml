@@ -30,11 +30,15 @@
   </url>
   
   <url>
-    <loc>http://gopherbook.iris-go.com/sessions/</loc>
+    <loc>http://gopherbook.iris-go.com/upload-files/</loc>
   </url>
   
   <url>
     <loc>http://gopherbook.iris-go.com/password-hashing/</loc>
+  </url>
+  
+  <url>
+    <loc>http://gopherbook.iris-go.com/sessions/</loc>
   </url>
   
   <url>
