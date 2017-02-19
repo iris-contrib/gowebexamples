@@ -317,12 +317,16 @@ func main() {
     // Equivalent with app.HandleFunc(&amp;quot;POST&amp;quot;, ...)
     app.Post(&amp;quot;/&amp;quot;, func(ctx *iris.Context) {
 
-        details := ContactDetails{
-            Email:   ctx.FormValue(&amp;quot;email&amp;quot;),
-            Subject: ctx.FormValue(&amp;quot;subject&amp;quot;),
-            Message: ctx.FormValue(&amp;quot;message&amp;quot;),
-        }
+        // details := ContactDetails{
+        //  Email:   ctx.FormValue(&amp;quot;email&amp;quot;),
+        //  Subject: ctx.FormValue(&amp;quot;subject&amp;quot;),
+        //  Message: ctx.FormValue(&amp;quot;message&amp;quot;),
+        // }
 
+        // or simply:
+        var details ContactDetails
+        ctx.ReadForm(&amp;amp;details)
+        
         // do something with details
         _ = details
 

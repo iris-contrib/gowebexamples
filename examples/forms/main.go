@@ -8,9 +8,9 @@ import (
 
 // ContactDetails the information from user
 type ContactDetails struct {
-	Email   string
-	Subject string
-	Message string
+	Email   string `form:"email"`
+	Subject string `form:"subject"`
+	Message string `form:"message"`
 }
 
 func main() {
@@ -27,11 +27,15 @@ func main() {
 	// Equivalent with app.HandleFunc("POST", ...)
 	app.Post("/", func(ctx *iris.Context) {
 
-		details := ContactDetails{
-			Email:   ctx.FormValue("email"),
-			Subject: ctx.FormValue("subject"),
-			Message: ctx.FormValue("message"),
-		}
+		// details := ContactDetails{
+		// 	Email:   ctx.FormValue("email"),
+		// 	Subject: ctx.FormValue("subject"),
+		// 	Message: ctx.FormValue("message"),
+		// }
+
+		// or simply:
+		var details ContactDetails
+		ctx.ReadForm(&details)
 
 		// do something with details
 		_ = details
