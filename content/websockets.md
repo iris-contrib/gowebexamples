@@ -1,5 +1,5 @@
 +++
-weight = 10
+weight = 11
 title = "Websockets"
 description = "This example will show how to work with websockets in Go. We will build a simple server which echoes back everything we send to it."
 +++
