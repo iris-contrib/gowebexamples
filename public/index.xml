@@ -578,7 +578,7 @@ uploads/
 └──
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;pre&gt;&lt;code&gt;$ go run static-files.go
+&lt;pre&gt;&lt;code&gt;$ go run upload-files.go
 &lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;&lt;html&gt;

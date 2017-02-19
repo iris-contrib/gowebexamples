@@ -89,7 +89,7 @@ uploads/
 └──
 ```
 ```
-$ go run static-files.go
+$ go run upload-files.go
 ```
 <html>
 <head>
