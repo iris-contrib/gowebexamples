@@ -632,21 +632,17 @@ func main() {
 
     app.Listen(&amp;quot;:8080&amp;quot;)
 }
-
-
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;$ tree ./
+&lt;pre&gt;&lt;code&gt;$ tree ./
 favicon.go
 static/
 └── favicons
-    └── iris_favicon_32_32.ico&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;
+    └── iris_favicon_32_32.ico
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;$ go run favicon.go
-```&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;$ go run favicon.go
+&lt;/code&gt;&lt;/pre&gt;
 </description>
     </item>
     
