@@ -632,21 +632,17 @@ func main() {
 
     app.Listen(&amp;quot;:8080&amp;quot;)
 }
-
-
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;$ tree ./
+&lt;pre&gt;&lt;code&gt;$ tree ./
 favicon.go
 static/
 └── favicons
-    └── iris_favicon_32_32.ico&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;
+    └── iris_favicon_32_32.ico
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;$ go run favicon.go
-```&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;$ go run favicon.go
+&lt;/code&gt;&lt;/pre&gt;
 </description>
     </item>
     
@@ -904,6 +900,154 @@ func main() {
     &lt;pre&gt;Status: Connected
 Server: Hello Go Web Examples, you&#39;re doing great!&lt;/pre&gt;
 &lt;/div&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Render Markdown and Cache Handler</title>
+      <link>http://gopherbook.iris-go.com/cache-markdown/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>http://gopherbook.iris-go.com/cache-markdown/</guid>
+      <description>
+
+&lt;h1 id=&#34;go-web-examples-render-markdown-and-cache-handler&#34;&gt;&lt;a href=&#34;http://gopherbook.iris-go.com/&#34;&gt;Go Web Examples:&lt;/a&gt; Render Markdown and Cache Handler&lt;/h1&gt;
+
+&lt;p&gt;This example will show how to send Markdown contents and use the Cache handler to cache the handler&amp;rsquo;s response.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;// file markdown-cache.go
+package main
+
+import (
+    &amp;quot;time&amp;quot;
+
+    &amp;quot;gopkg.in/kataras/iris.v6&amp;quot;
+    &amp;quot;gopkg.in/kataras/iris.v6/adaptors/httprouter&amp;quot;
+)
+
+var testMarkdownContents = `## Hello Markdown
+
+This is a sample of Markdown contents
+
+
+
+Features
+--------
+
+All features of Sundown are supported, including:
+
+*   **Compatibility**. The Markdown v1.0.3 test suite passes with
+    the --tidy option.  Without --tidy, the differences are
+    mostly in whitespace and entity escaping, where blackfriday is
+    more consistent and cleaner.
+
+*   **Common extensions**, including table support, fenced code
+    blocks, autolinks, strikethroughs, non-strict emphasis, etc.
+
+*   **Safety**. Blackfriday is paranoid when parsing, making it safe
+    to feed untrusted user input without fear of bad things
+    happening. The test suite stress tests this and there are no
+    known inputs that make it crash.  If you find one, please let me
+    know and send me the input that does it.
+
+    NOTE: &amp;quot;safety&amp;quot; in this context means *runtime safety only*. In order to
+    protect yourself against JavaScript injection in untrusted content, see
+    [this example](https://github.com/russross/blackfriday#sanitize-untrusted-content).
+
+*   **Fast processing**. It is fast enough to render on-demand in
+    most web applications without having to cache the output.
+
+*   **Thread safety**. You can run multiple parsers in different
+    goroutines without ill effect. There is no dependence on global
+    shared state.
+
+*   **Minimal dependencies**. Blackfriday only depends on standard
+    library packages in Go. The source code is pretty
+    self-contained, so it is easy to add to any project, including
+    Google App Engine projects.
+
+*   **Standards compliant**. Output successfully validates using the
+    W3C validation tool for HTML 4.01 and XHTML 1.0 Transitional.
+
+    [this is a link](https://github.com/kataras/iris) `
+
+func main() {
+    app := iris.New()
+    // output startup banner and error logs on os.Stdout
+    app.Adapt(iris.DevLogger())
+    // set the router, you can choose gorillamux too
+    app.Adapt(httprouter.New())
+
+    app.Get(&amp;quot;/hi&amp;quot;, app.Cache(func(c *iris.Context) {
+        c.WriteString(&amp;quot;Hi this is a big content, do not try cache on small content it will not make any significant difference!&amp;quot;)
+    }, time.Duration(10)*time.Second))
+
+    bodyHandler := func(ctx *iris.Context) {
+        ctx.Markdown(iris.StatusOK, testMarkdownContents)
+    }
+
+    expiration := time.Duration(5 * time.Second)
+
+    app.Get(&amp;quot;/&amp;quot;, app.Cache(bodyHandler, expiration))
+
+    // if expiration is &amp;lt;=time.Second then the cache tries to set the expiration from the &amp;quot;cache-control&amp;quot; maxage header&#39;s value(in seconds)
+    // // if this header doesn&#39;t founds then the default is 5 minutes
+    app.Get(&amp;quot;/cache_control&amp;quot;, app.Cache(func(ctx *iris.Context) {
+        ctx.HTML(iris.StatusOK, &amp;quot;&amp;lt;h1&amp;gt;Hello!&amp;lt;/h1&amp;gt;&amp;quot;)
+    }, -1))
+
+    app.Listen(&amp;quot;:8080&amp;quot;)
+}
+
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;pre&gt;&lt;code&gt;$ go run markdown-cache.go
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2&gt;Hello Markdown&lt;/h2&gt;
+
+&lt;p&gt;This is a sample of Markdown contents&lt;/p&gt;
+
+&lt;h2&gt;Features&lt;/h2&gt;
+
+&lt;p&gt;All features of Sundown are supported, including:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;&lt;strong&gt;Compatibility&lt;/strong&gt;. The Markdown v1.0.3 test suite passes with
+the &amp;ndash;tidy option.  Without &amp;ndash;tidy, the differences are
+mostly in whitespace and entity escaping, where blackfriday is
+more consistent and cleaner.&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;&lt;strong&gt;Common extensions&lt;/strong&gt;, including table support, fenced code
+blocks, autolinks, strikethroughs, non-strict emphasis, etc.&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;&lt;strong&gt;Safety&lt;/strong&gt;. Blackfriday is paranoid when parsing, making it safe
+to feed untrusted user input without fear of bad things
+happening. The test suite stress tests this and there are no
+known inputs that make it crash.  If you find one, please let me
+know and send me the input that does it.&lt;/p&gt;
+
+&lt;p&gt;NOTE: &amp;ldquo;safety&amp;rdquo; in this context means &lt;em&gt;runtime safety only&lt;/em&gt;. In order to
+protect yourself against JavaScript injection in untrusted content, see
+&lt;a href=&#34;https://github.com/russross/blackfriday#sanitize-untrusted-content&#34;&gt;this example&lt;/a&gt;.&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;&lt;strong&gt;Fast processing&lt;/strong&gt;. It is fast enough to render on-demand in
+most web applications without having to cache the output.&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;&lt;strong&gt;Thread safety&lt;/strong&gt;. You can run multiple parsers in different
+goroutines without ill effect. There is no dependence on global
+shared state.&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;&lt;strong&gt;Minimal dependencies&lt;/strong&gt;. Blackfriday only depends on standard
+library packages in Go. The source code is pretty
+self-contained, so it is easy to add to any project, including
+Google App Engine projects.&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;&lt;strong&gt;Standards compliant&lt;/strong&gt;. Output successfully validates using the
+W3C validation tool for HTML 4.01 and XHTML 1.0 Transitional.&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;https://github.com/kataras/iris&#34;&gt;this is a link&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
 </description>
     </item>
     
