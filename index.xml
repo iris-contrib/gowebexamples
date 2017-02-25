@@ -1051,5 +1051,309 @@ W3C validation tool for HTML 4.01 and XHTML 1.0 Transitional.&lt;/p&gt;
 </description>
     </item>
     
+    <item>
+      <title>Online Visitors</title>
+      <link>http://gopherbook.iris-go.com/online-visitors/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>http://gopherbook.iris-go.com/online-visitors/</guid>
+      <description>
+
+&lt;h1 id=&#34;go-web-examples-online-visitors&#34;&gt;&lt;a href=&#34;http://gopherbook.iris-go.com/&#34;&gt;Go Web Examples:&lt;/a&gt; Online Visitors&lt;/h1&gt;
+
+&lt;p&gt;This example will show how to do an online visitors system per-page.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;// file online-visitors.go
+package main
+
+import (
+    &amp;quot;sync/atomic&amp;quot;
+
+    &amp;quot;gopkg.in/kataras/iris.v6&amp;quot;
+    &amp;quot;gopkg.in/kataras/iris.v6/adaptors/httprouter&amp;quot;
+    &amp;quot;gopkg.in/kataras/iris.v6/adaptors/view&amp;quot;
+    &amp;quot;gopkg.in/kataras/iris.v6/adaptors/websocket&amp;quot;
+)
+
+var (
+    app *iris.Framework
+    ws  websocket.Server
+)
+
+func init() {
+    // init the server instance
+    app = iris.New()
+    // adapt a logger in dev mode
+    app.Adapt(iris.DevLogger())
+    // adapt router
+    app.Adapt(httprouter.New())
+    // adapt templaes
+    app.Adapt(view.HTML(&amp;quot;./templates&amp;quot;, &amp;quot;.html&amp;quot;).Reload(true))
+    // adapt websocket
+    ws = websocket.New(websocket.Config{Endpoint: &amp;quot;/my_endpoint&amp;quot;})
+    ws.OnConnection(HandleWebsocketConnection)
+    app.Adapt(ws)
+}
+
+type page struct {
+    PageID string
+}
+
+func main() {
+    app.StaticWeb(&amp;quot;/js&amp;quot;, &amp;quot;./static/assets/js&amp;quot;)
+
+    h := func(ctx *iris.Context) {
+        ctx.Render(&amp;quot;index.html&amp;quot;, page{PageID: &amp;quot;index page&amp;quot;})
+    }
+
+    h2 := func(ctx *iris.Context) {
+        ctx.Render(&amp;quot;other.html&amp;quot;, page{PageID: &amp;quot;other page&amp;quot;})
+    }
+
+    // Open some browser tabs/or windows
+    // and navigate to
+    // http://localhost:8080/ and http://localhost:8080/other
+    // Each page has its own online-visitors counter.
+    app.Get(&amp;quot;/&amp;quot;, h)
+    app.Get(&amp;quot;/other&amp;quot;, h2)
+    app.Listen(&amp;quot;:8080&amp;quot;)
+}
+
+type pageView struct {
+    source string
+    count  uint64
+}
+
+func (v *pageView) increment() {
+    atomic.AddUint64(&amp;amp;v.count, 1)
+}
+
+func (v *pageView) decrement() {
+    oldCount := v.count
+    if oldCount &amp;gt; 0 {
+        atomic.StoreUint64(&amp;amp;v.count, oldCount-1)
+    }
+}
+
+func (v *pageView) getCount() uint64 {
+    val := atomic.LoadUint64(&amp;amp;v.count)
+    return val
+}
+
+type (
+    pageViews []pageView
+)
+
+func (v *pageViews) Add(source string) {
+    args := *v
+    n := len(args)
+    for i := 0; i &amp;lt; n; i++ {
+        kv := &amp;amp;args[i]
+        if kv.source == source {
+            kv.increment()
+            return
+        }
+    }
+
+    c := cap(args)
+    if c &amp;gt; n {
+        args = args[:n+1]
+        kv := &amp;amp;args[n]
+        kv.source = source
+        kv.count = 1
+        *v = args
+        return
+    }
+
+    kv := pageView{}
+    kv.source = source
+    kv.count = 1
+    *v = append(args, kv)
+}
+
+func (v *pageViews) Get(source string) *pageView {
+    args := *v
+    n := len(args)
+    for i := 0; i &amp;lt; n; i++ {
+        kv := &amp;amp;args[i]
+        if kv.source == source {
+            return kv
+        }
+    }
+    return nil
+}
+
+func (v *pageViews) Reset() {
+    *v = (*v)[:0]
+}
+
+var v pageViews
+
+// HandleWebsocketConnection handles the online viewers per example(gist source)
+func HandleWebsocketConnection(c websocket.Connection) {
+
+    c.On(&amp;quot;watch&amp;quot;, func(pageSource string) {
+        v.Add(pageSource)
+        // join the socket to a room linked with the page source
+        c.Join(pageSource)
+
+        viewsCount := v.Get(pageSource).getCount()
+        if viewsCount == 0 {
+            viewsCount++ // count should be always &amp;gt; 0 here
+        }
+        c.To(pageSource).Emit(&amp;quot;watch&amp;quot;, viewsCount)
+    })
+
+    c.OnLeave(func(roomName string) {
+        if roomName != c.ID() { // if the roomName  it&#39;s not the connection iself
+            // the roomName here is the source, this is the only room(except the connection&#39;s ID room) which we join the users to.
+            pageV := v.Get(roomName)
+            if pageV == nil {
+                return // for any case that this room is not a pageView source
+            }
+            // decrement -1 the specific counter for this page source.
+            pageV.decrement()
+            // 1. open 30 tabs.
+            // 2. close the browser.
+            // 3. re-open the browser
+            // 4. should be  v.getCount() = 1
+            // in order to achieve the previous flow we should decrement exactly when the user disconnects
+            // but emit the result a little after, on a goroutine
+            // getting all connections within this room and emit the online views one by one.
+            // note:
+            // we can also add a time.Sleep(2-3 seconds) inside the goroutine at the future if we don&#39;t need &#39;real-time&#39; updates.
+            go func(currentConnID string) {
+                for _, conn := range ws.GetConnectionsByRoom(roomName) {
+                    if conn.ID() != currentConnID {
+                        conn.Emit(&amp;quot;watch&amp;quot;, pageV.getCount())
+                    }
+
+                }
+            }(c.ID())
+        }
+
+    })
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;pre&gt;&lt;code&gt;// file static/assets/js/visitors.js
+(function() {
+  var socket = new Ws(&amp;quot;ws://localhost:8080/my_endpoint&amp;quot;);
+
+  socket.OnConnect(function () {
+      socket.Emit(&amp;quot;watch&amp;quot;, PAGE_SOURCE);
+  });
+
+
+  socket.On(&amp;quot;watch&amp;quot;, function (onlineViews) {
+      var text = &amp;quot;1 online view&amp;quot;;
+      if (onlineViews &amp;gt; 1) {
+          text = onlineViews + &amp;quot; online views&amp;quot;;
+      }
+      document.getElementById(&amp;quot;online_views&amp;quot;).innerHTML = text;
+  });
+
+  socket.OnDisconnect(function () {
+    document.getElementById(&amp;quot;online_views&amp;quot;).innerHTML = &amp;quot;you&#39;ve been disconnected&amp;quot;;
+  });
+
+})();
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;pre&gt;&lt;code&gt;&amp;lt;!-- file ./templates/index.html --&amp;gt;
+&amp;lt;html&amp;gt;
+
+&amp;lt;head&amp;gt;
+    &amp;lt;title&amp;gt;Online visitors example&amp;lt;/title&amp;gt;
+    &amp;lt;style&amp;gt;
+        body {
+            margin: 0;
+            font-family: -apple-system, &amp;quot;San Francisco&amp;quot;, &amp;quot;Helvetica Neue&amp;quot;, &amp;quot;Noto&amp;quot;, &amp;quot;Roboto&amp;quot;, &amp;quot;Calibri Light&amp;quot;, sans-serif;
+            color: #212121;
+            font-size: 1.0em;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 750px;
+            margin: auto;
+            padding: 15px;
+        }
+
+        #online_views {
+            font-weight: bold;
+            font-size: 18px;
+        }
+    &amp;lt;/style&amp;gt;
+&amp;lt;/head&amp;gt;
+
+&amp;lt;body&amp;gt;
+    &amp;lt;div class=&amp;quot;container&amp;quot;&amp;gt;
+        &amp;lt;span id=&amp;quot;online_views&amp;quot;&amp;gt;1 online view&amp;lt;/span&amp;gt;
+    &amp;lt;/div&amp;gt;
+
+    &amp;lt;script type=&amp;quot;text/javascript&amp;quot;&amp;gt;
+      /* take the page source from our passed struct  on .Render */
+      var PAGE_SOURCE = {{ .PageID }}
+    &amp;lt;/script&amp;gt;
+
+    &amp;lt;script src=&amp;quot;/iris-ws.js&amp;quot;&amp;gt;&amp;lt;/script&amp;gt;
+
+    &amp;lt;script src=&amp;quot;/js/visitors.js&amp;quot;&amp;gt;&amp;lt;/script&amp;gt;
+
+&amp;lt;/body&amp;gt;
+
+&amp;lt;/html&amp;gt;
+
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;pre&gt;&lt;code&gt;&amp;lt;!-- file ./templates/other.html --&amp;gt;
+&amp;lt;html&amp;gt;
+
+&amp;lt;head&amp;gt;
+    &amp;lt;title&amp;gt;Different page, different results&amp;lt;/title&amp;gt;
+    &amp;lt;style&amp;gt;
+        #online_views {
+            font-weight: bold;
+            font-size: 18px;
+        }
+    &amp;lt;/style&amp;gt;
+&amp;lt;/head&amp;gt;
+
+&amp;lt;body&amp;gt;
+
+    &amp;lt;span id=&amp;quot;online_views&amp;quot;&amp;gt;1 online view&amp;lt;/span&amp;gt;
+
+
+    &amp;lt;script type=&amp;quot;text/javascript&amp;quot;&amp;gt;
+      /* take the page source from our passed struct  on .Render */
+      var PAGE_SOURCE = {{ .PageID }}
+    &amp;lt;/script&amp;gt;
+
+    &amp;lt;script src=&amp;quot;/iris-ws.js&amp;quot;&amp;gt;&amp;lt;/script&amp;gt;
+
+    &amp;lt;script src=&amp;quot;/js/visitors.js&amp;quot;&amp;gt;&amp;lt;/script&amp;gt;
+
+&amp;lt;/body&amp;gt;
+
+&amp;lt;/html&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;pre&gt;&lt;code&gt;$ tree ./
+online-visitors.go
+static/
+└── assets/
+        └──js/
+           └── visitors.js
+templates/
+└── index.html
+└── other.html
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;pre&gt;&lt;code&gt;$ go run online-visitors.go
+&lt;/code&gt;&lt;/pre&gt;
+</description>
+    </item>
+    
   </channel>
 </rss>
