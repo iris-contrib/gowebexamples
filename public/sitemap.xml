@@ -54,6 +54,10 @@
   </url>
   
   <url>
+    <loc>http://gopherbook.iris-go.com/online-visitors/</loc>
+  </url>
+  
+  <url>
     <loc>http://gopherbook.iris-go.com/</loc>
     <priority>0</priority>
   </url>
