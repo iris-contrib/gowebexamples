@@ -1355,5 +1355,195 @@ templates/
 </description>
     </item>
     
+    <item>
+      <title>URL Shortener</title>
+      <link>http://gopherbook.iris-go.com/url-shortener/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>http://gopherbook.iris-go.com/url-shortener/</guid>
+      <description>
+
+&lt;h1 id=&#34;go-web-examples-url-shortener&#34;&gt;&lt;a href=&#34;http://gopherbook.iris-go.com/&#34;&gt;Go Web Examples:&lt;/a&gt; URL Shortener&lt;/h1&gt;
+
+&lt;p&gt;This example will show how to make a simple URL Shortener.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;// url-shortener.go
+package main
+
+import (
+    &amp;quot;html/template&amp;quot;
+    &amp;quot;math/rand&amp;quot;
+    &amp;quot;net/url&amp;quot;
+    &amp;quot;sync&amp;quot;
+    &amp;quot;time&amp;quot;
+
+    &amp;quot;gopkg.in/kataras/iris.v6&amp;quot;
+    &amp;quot;gopkg.in/kataras/iris.v6/adaptors/httprouter&amp;quot;
+    &amp;quot;gopkg.in/kataras/iris.v6/adaptors/view&amp;quot;
+)
+
+func main() {
+    app := iris.New()
+    app.Adapt(
+        iris.DevLogger(),
+        httprouter.New(),
+        view.HTML(&amp;quot;./templates&amp;quot;, &amp;quot;.html&amp;quot;).Reload(true),
+    )
+
+    // Serve static files (css)
+    app.StaticWeb(&amp;quot;/static&amp;quot;, &amp;quot;./static_files&amp;quot;)
+
+    var mu sync.Mutex
+    var urls = map[string]string{
+        &amp;quot;iris&amp;quot;: &amp;quot;http://support.iris-go.com&amp;quot;,
+    }
+
+    app.Get(&amp;quot;/&amp;quot;, func(ctx *iris.Context) {
+        ctx.Render(&amp;quot;index.html&amp;quot;, iris.Map{&amp;quot;url_count&amp;quot;: len(urls)})
+    })
+
+    // find and execute a short url by its key
+    // used on http://localhost:8080/url/dsaoj41u321dsa
+    execShortURL := func(ctx *iris.Context, key string) {
+        if key == &amp;quot;&amp;quot; {
+            ctx.EmitError(iris.StatusBadRequest)
+            return
+        }
+
+        value, found := urls[key]
+        if !found {
+            ctx.SetStatusCode(iris.StatusNotFound)
+            ctx.Writef(&amp;quot;Short URL for key: &#39;%s&#39; not found&amp;quot;, key)
+            return
+        }
+
+        ctx.Redirect(value, iris.StatusTemporaryRedirect)
+    }
+    app.Get(&amp;quot;/url/:shortkey&amp;quot;, func(ctx *iris.Context) {
+        execShortURL(ctx, ctx.Param(&amp;quot;shortkey&amp;quot;))
+    })
+
+    //  for wildcard subdomain (yeah.. cool) http://dsaoj41u321dsa.localhost:8080
+    // Note:
+    // if you want subdomains (chrome doesn&#39;t works on localhost, so you have to define other hostname on app.Listen)
+    // app.Party(&amp;quot;*.&amp;quot;, func(ctx *iris.Context) {
+    //  execShortURL(ctx, ctx.Subdomain())
+    // })
+
+    app.Post(&amp;quot;/url/shorten&amp;quot;, func(ctx *iris.Context) {
+        data := make(map[string]interface{}, 0)
+        data[&amp;quot;url_count&amp;quot;] = len(urls)
+        value := ctx.FormValue(&amp;quot;url&amp;quot;)
+        if value == &amp;quot;&amp;quot; {
+            data[&amp;quot;form_result&amp;quot;] = &amp;quot;You need to a enter a URL.&amp;quot;
+        } else {
+            urlValue, err := url.ParseRequestURI(value)
+            if err != nil {
+                // ctx.JSON(iris.StatusInternalServerError,
+                //  iris.Map{&amp;quot;status&amp;quot;: iris.StatusInternalServerError,
+                //      &amp;quot;error&amp;quot;:  err.Error(),
+                //      &amp;quot;reason&amp;quot;: &amp;quot;Invalid URL&amp;quot;,
+                //  })
+                data[&amp;quot;form_result&amp;quot;] = &amp;quot;Invalid URL.&amp;quot;
+            } else {
+                key := randomString(12)
+                // Make sure that the key is unique
+                for {
+                    if _, exists := urls[key]; !exists {
+                        break
+                    }
+                    key = randomString(8)
+                }
+                mu.Lock()
+                urls[key] = urlValue.String()
+                mu.Unlock()
+                ctx.SetStatusCode(iris.StatusOK)
+                shortenURL := &amp;quot;http://&amp;quot; + app.Config.VHost + &amp;quot;/url/&amp;quot; + key
+                data[&amp;quot;form_result&amp;quot;] = template.HTML(&amp;quot;&amp;lt;pre&amp;gt;Here is your short URL: &amp;lt;a href=&#39;&amp;quot; + shortenURL + &amp;quot;&#39;&amp;gt;&amp;quot; + shortenURL + &amp;quot; &amp;lt;/a&amp;gt;&amp;lt;/pre&amp;gt;&amp;quot;)
+            }
+
+        }
+        ctx.Render(&amp;quot;index.html&amp;quot;, data)
+    })
+
+    app.Listen(&amp;quot;localhost:8080&amp;quot;)
+}
+
+//  +------------------------------------------------------------+
+//  |                                                            |
+//  |                      Random String                         |
+//  |                                                            |
+//  +------------------------------------------------------------+
+
+const (
+    letterBytes   = &amp;quot;abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ&amp;quot;
+    letterIdxBits = 6                    // 6 bits to represent a letter index
+    letterIdxMask = 1&amp;lt;&amp;lt;letterIdxBits - 1 // All 1-bits, as many as letterIdxBits
+    letterIdxMax  = 63 / letterIdxBits   // # of letter indices fitting in 63 bits
+)
+
+func randomString(n int) string {
+    src := rand.NewSource(time.Now().UnixNano())
+    b := make([]byte, n)
+    // A src.Int63() generates 63 random bits, enough for letterIdxMax characters!
+    for i, cache, remain := n-1, src.Int63(), letterIdxMax; i &amp;gt;= 0; {
+        if remain == 0 {
+            cache, remain = src.Int63(), letterIdxMax
+        }
+        if idx := int(cache &amp;amp; letterIdxMask); idx &amp;lt; len(letterBytes) {
+            b[i] = letterBytes[idx]
+            i--
+        }
+        cache &amp;gt;&amp;gt;= letterIdxBits
+        remain--
+    }
+
+    return string(b)
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;pre&gt;&lt;code&gt;/* static_files/style.css */
+body{
+    background-color:silver;
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;pre&gt;&lt;code&gt;&amp;lt;!-- templates/index.html --&amp;gt;
+&amp;lt;html&amp;gt;
+
+&amp;lt;head&amp;gt;
+    &amp;lt;meta charset=&amp;quot;utf-8&amp;quot;&amp;gt;
+    &amp;lt;title&amp;gt;Golang URL Shortener&amp;lt;/title&amp;gt;
+    &amp;lt;link rel=&amp;quot;stylesheet&amp;quot; href=&amp;quot;/static/css/style.css&amp;quot; /&amp;gt;
+&amp;lt;/head&amp;gt;
+
+&amp;lt;body&amp;gt;
+    &amp;lt;h2&amp;gt;Golang URL Shortener&amp;lt;/h2&amp;gt;
+    &amp;lt;h3&amp;gt;{{ .form_result}}&amp;lt;/h3&amp;gt;
+    &amp;lt;form action=&amp;quot;/url/shorten&amp;quot; method=&amp;quot;POST&amp;quot;&amp;gt;
+        &amp;lt;input type=&amp;quot;text&amp;quot; name=&amp;quot;url&amp;quot; style=&amp;quot;width: 35em;&amp;quot; /&amp;gt;
+        &amp;lt;input type=&amp;quot;submit&amp;quot; value=&amp;quot;Shorten!&amp;quot; /&amp;gt;
+    &amp;lt;/form&amp;gt;
+
+    &amp;lt;p&amp;gt;{{ .url_count }} URLs shortened&amp;lt;/p&amp;gt;
+&amp;lt;/body&amp;gt;
+
+&amp;lt;/html&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;pre&gt;&lt;code&gt;$ tree ./
+url-shortener.go
+templates/
+└── index.html
+static_files/
+└── css
+    └── styles.css
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;pre&gt;&lt;code&gt;$ go run url-shortener.go
+&lt;/code&gt;&lt;/pre&gt;
+</description>
+    </item>
+    
   </channel>
 </rss>

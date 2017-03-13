@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	
+		<title>GopherBOOk: URL Shortener</title>
+	
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+	<meta name="description" content="This example will show how to make a simple URL Shortener in Go programming language." />
+	<link rel="alternate" type="application/rss+xml" href="/index.xml" />
+	<link rel="canonical" href="http://gopherbook.iris-go.com/url-shortener/">
+	<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+	<link rel="icon" type="image/png" href="/favicon-32x32.png" sizes="32x32">
+	<link rel="icon" type="image/png" href="/favicon-16x16.png" sizes="16x16">
+	<meta name="theme-color" content="#bb8844">
+	<style>
+		body {
+			margin: 0;
+			font-family: -apple-system, "San Francisco", "Helvetica Neue", "Noto",  "Roboto", "Calibri Light", sans-serif;
+			color: #212121;
+			font-size: 1.1em;
+			line-height: 1.6;
+		}
+		.container { max-width: 700px; margin: auto; padding: 15px; }
+		a {	color: black; }
+		p { font-family: "Georgia", serif; margin: 0.5em 0; }
+		h1 { margin: 1em 0; }
+		h1 a { text-decoration: none; }
+		h2 { font-size: 1.2em; margin: 0.5em 0; }
+		pre { padding: 15px; overflow-x: auto; background: #fafafa; border: 1px solid #f0f0f0; }
+		.demo pre { background-color: white; border: none; margin: 1em 0 0 0; padding: 0; }
+		a[target="_blank"] { background: url(/link.svg) right top/9px no-repeat; padding-right: 12px; }
+		.links { display: flex; justify-content: space-between; }
+		a.back { text-decoration: none; }
+		a.home { text-decoration: none; }
+		a.forward { text-decoration: none; }
+		.footer { font-size: .9em; margin-top: 1em; color: #999; font-family: "Georgia", serif; }
+		.footer a { color: #999; }
+		.image { border: 1px solid #f0f0f0; }
+		.image img { max-width: 100%; height: auto; display: block; }
+		.demo { border: 1px solid #f0f0f0; padding: 15px; line-height: 1.4; pointer-events: none; }
+		.demo h1 { margin: 0 0 0.5em 0; font-size: 1.5em; }
+		.demo input[type=text], .demo textarea { box-sizing: border-box; width: 100%; max-width: 20em; }
+	</style>
+</head>
+<body>
+<div class="container">
+
+
+
+<h1 id="go-web-examples-url-shortener"><a href="/">Go Web Examples:</a> URL Shortener</h1>
+
+<p>This example will show how to make a simple URL Shortener.</p>
+
+<pre><code>// url-shortener.go
+package main
+
+import (
+    &quot;html/template&quot;
+    &quot;math/rand&quot;
+    &quot;net/url&quot;
+    &quot;sync&quot;
+    &quot;time&quot;
+
+    &quot;gopkg.in/kataras/iris.v6&quot;
+    &quot;gopkg.in/kataras/iris.v6/adaptors/httprouter&quot;
+    &quot;gopkg.in/kataras/iris.v6/adaptors/view&quot;
+)
+
+func main() {
+    app := iris.New()
+    app.Adapt(
+        iris.DevLogger(),
+        httprouter.New(),
+        view.HTML(&quot;./templates&quot;, &quot;.html&quot;).Reload(true),
+    )
+
+    // Serve static files (css)
+    app.StaticWeb(&quot;/static&quot;, &quot;./static_files&quot;)
+
+    var mu sync.Mutex
+    var urls = map[string]string{
+        &quot;iris&quot;: &quot;http://support.iris-go.com&quot;,
+    }
+
+    app.Get(&quot;/&quot;, func(ctx *iris.Context) {
+        ctx.Render(&quot;index.html&quot;, iris.Map{&quot;url_count&quot;: len(urls)})
+    })
+
+    // find and execute a short url by its key
+    // used on http://localhost:8080/url/dsaoj41u321dsa
+    execShortURL := func(ctx *iris.Context, key string) {
+        if key == &quot;&quot; {
+            ctx.EmitError(iris.StatusBadRequest)
+            return
+        }
+
+        value, found := urls[key]
+        if !found {
+            ctx.SetStatusCode(iris.StatusNotFound)
+            ctx.Writef(&quot;Short URL for key: '%s' not found&quot;, key)
+            return
+        }
+
+        ctx.Redirect(value, iris.StatusTemporaryRedirect)
+    }
+    app.Get(&quot;/url/:shortkey&quot;, func(ctx *iris.Context) {
+        execShortURL(ctx, ctx.Param(&quot;shortkey&quot;))
+    })
+
+    //  for wildcard subdomain (yeah.. cool) http://dsaoj41u321dsa.localhost:8080
+    // Note:
+    // if you want subdomains (chrome doesn't works on localhost, so you have to define other hostname on app.Listen)
+    // app.Party(&quot;*.&quot;, func(ctx *iris.Context) {
+    //  execShortURL(ctx, ctx.Subdomain())
+    // })
+
+    app.Post(&quot;/url/shorten&quot;, func(ctx *iris.Context) {
+        data := make(map[string]interface{}, 0)
+        data[&quot;url_count&quot;] = len(urls)
+        value := ctx.FormValue(&quot;url&quot;)
+        if value == &quot;&quot; {
+            data[&quot;form_result&quot;] = &quot;You need to a enter a URL.&quot;
+        } else {
+            urlValue, err := url.ParseRequestURI(value)
+            if err != nil {
+                // ctx.JSON(iris.StatusInternalServerError,
+                //  iris.Map{&quot;status&quot;: iris.StatusInternalServerError,
+                //      &quot;error&quot;:  err.Error(),
+                //      &quot;reason&quot;: &quot;Invalid URL&quot;,
+                //  })
+                data[&quot;form_result&quot;] = &quot;Invalid URL.&quot;
+            } else {
+                key := randomString(12)
+                // Make sure that the key is unique
+                for {
+                    if _, exists := urls[key]; !exists {
+                        break
+                    }
+                    key = randomString(8)
+                }
+                mu.Lock()
+                urls[key] = urlValue.String()
+                mu.Unlock()
+                ctx.SetStatusCode(iris.StatusOK)
+                shortenURL := &quot;http://&quot; + app.Config.VHost + &quot;/url/&quot; + key
+                data[&quot;form_result&quot;] = template.HTML(&quot;&lt;pre&gt;Here is your short URL: &lt;a href='&quot; + shortenURL + &quot;'&gt;&quot; + shortenURL + &quot; &lt;/a&gt;&lt;/pre&gt;&quot;)
+            }
+
+        }
+        ctx.Render(&quot;index.html&quot;, data)
+    })
+
+    app.Listen(&quot;localhost:8080&quot;)
+}
+
+//  +------------------------------------------------------------+
+//  |                                                            |
+//  |                      Random String                         |
+//  |                                                            |
+//  +------------------------------------------------------------+
+
+const (
+    letterBytes   = &quot;abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ&quot;
+    letterIdxBits = 6                    // 6 bits to represent a letter index
+    letterIdxMask = 1&lt;&lt;letterIdxBits - 1 // All 1-bits, as many as letterIdxBits
+    letterIdxMax  = 63 / letterIdxBits   // # of letter indices fitting in 63 bits
+)
+
+func randomString(n int) string {
+    src := rand.NewSource(time.Now().UnixNano())
+    b := make([]byte, n)
+    // A src.Int63() generates 63 random bits, enough for letterIdxMax characters!
+    for i, cache, remain := n-1, src.Int63(), letterIdxMax; i &gt;= 0; {
+        if remain == 0 {
+            cache, remain = src.Int63(), letterIdxMax
+        }
+        if idx := int(cache &amp; letterIdxMask); idx &lt; len(letterBytes) {
+            b[i] = letterBytes[idx]
+            i--
+        }
+        cache &gt;&gt;= letterIdxBits
+        remain--
+    }
+
+    return string(b)
+}
+</code></pre>
+
+<pre><code>/* static_files/style.css */
+body{
+    background-color:silver;
+}
+</code></pre>
+
+<pre><code>&lt;!-- templates/index.html --&gt;
+&lt;html&gt;
+
+&lt;head&gt;
+    &lt;meta charset=&quot;utf-8&quot;&gt;
+    &lt;title&gt;Golang URL Shortener&lt;/title&gt;
+    &lt;link rel=&quot;stylesheet&quot; href=&quot;/static/css/style.css&quot; /&gt;
+&lt;/head&gt;
+
+&lt;body&gt;
+    &lt;h2&gt;Golang URL Shortener&lt;/h2&gt;
+    &lt;h3&gt;{{ .form_result}}&lt;/h3&gt;
+    &lt;form action=&quot;/url/shorten&quot; method=&quot;POST&quot;&gt;
+        &lt;input type=&quot;text&quot; name=&quot;url&quot; style=&quot;width: 35em;&quot; /&gt;
+        &lt;input type=&quot;submit&quot; value=&quot;Shorten!&quot; /&gt;
+    &lt;/form&gt;
+
+    &lt;p&gt;{{ .url_count }} URLs shortened&lt;/p&gt;
+&lt;/body&gt;
+
+&lt;/html&gt;
+</code></pre>
+
+<pre><code>$ tree ./
+url-shortener.go
+templates/
+└── index.html
+static_files/
+└── css
+    └── styles.css
+</code></pre>
+
+<pre><code>$ go run url-shortener.go
+</code></pre>
+
+	<div class="footer">
+		<div class="links">
+		
+			
+			<a title="Online Visitors" class="back" href="http://gopherbook.iris-go.com/online-visitors/">← back</a>
+			
+			<a title="GopherBOOk" class="home" href="/">home</a>
+			
+			<a title="GopherBOOk" class="forward" href="http://gopherbook.iris-go.com/">forward →</a>
+			
+		
+		</div>
+		<br /><br />
+		 <a href="https://github.com/kataras/iris">Iris web framework</a>
+		 <a href="http://support.iris-go.com">Looking for further Support?</a>
+	</div>
+</div>
+</body>
+</html>
