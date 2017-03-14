@@ -1367,6 +1367,10 @@ templates/
 
 &lt;p&gt;This example will show how to make a simple URL Shortener.&lt;/p&gt;
 
+&lt;blockquote&gt;
+&lt;p&gt;Do you want to learn how to make the same thing with BoltDB? Click &lt;a href=&#34;https://github.com/kataras/iris/blob/v6/_examples/examples/url-shortener/main.go&#34;&gt;here&lt;/a&gt;!&lt;/p&gt;
+&lt;/blockquote&gt;
+
 &lt;pre&gt;&lt;code&gt;// url-shortener.go
 package main
 
@@ -1502,7 +1506,7 @@ func randomString(n int) string {
 }
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;pre&gt;&lt;code&gt;/* static_files/style.css */
+&lt;pre&gt;&lt;code&gt;/* static_files/css/style.css */
 body{
     background-color:silver;
 }

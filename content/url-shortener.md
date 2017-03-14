@@ -8,6 +8,9 @@ description = "This example will show how to make a simple URL Shortener in Go p
 
 This example will show how to make a simple URL Shortener.
 
+> Do you want to learn how to make the same thing with BoltDB? Click [here](https://github.com/kataras/iris/blob/v6/_examples/examples/url-shortener/main.go)!
+
+
 ```
 // url-shortener.go
 package main
@@ -146,7 +149,7 @@ func randomString(n int) string {
 
 
 ```
-/* static_files/style.css */
+/* static_files/css/style.css */
 body{
     background-color:silver;
 }
