@@ -1,8 +1,0 @@
-baseUrl = "http://gopherbook.iris-go.com/"
-languageCode = "en-us"
-title = "GopherBOOk"
-PygmentsCodeFences = true
-PygmentsStyle = "trac"
-EnableRobotsTXT = true
-[Params]
-description = "GopherBOOk provides easy to understand code snippets on how to get started with web development in the Go programming language using Iris web framework."
